@@ -1,0 +1,423 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Centrefit Group × Veyla — welcome to your new Snap Fitness club</title>
+<style>
+:root{--navy:#0b1d3a;--navy2:#102a52;--cyan:#19c2ff;--cyan2:#0aa3dc;--white:#ffffff;--muted:#b9c7dc;--ok:#2ee07a;--warn:#ffb020;--bad:#ff4d5e;--esp:#1f1511;--esp2:#2d2019;--cream:#f3e9d8;--amber:#e3a24a}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;background:var(--navy);color:var(--white);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:18px;line-height:1.45}
+#top{position:sticky;top:0;z-index:5;background:rgba(11,29,58,.92);backdrop-filter:blur(8px);border-bottom:1px solid rgba(255,255,255,.08)}
+#top .bar{display:flex;align-items:center;gap:10px;padding:10px 14px}
+#top img{height:28px}
+#top .sp{flex:1}
+#top .pg{font-size:14px;color:var(--muted)}
+#tabs{display:flex;gap:8px;overflow-x:auto;padding:0 12px 10px;scrollbar-width:none}
+#tabs::-webkit-scrollbar{display:none}
+#tabs button{flex:0 0 auto;border:1px solid rgba(255,255,255,.18);background:transparent;color:var(--muted);border-radius:999px;padding:8px 14px;font-size:15px;font-weight:600}
+#tabs button.on{background:var(--cyan);border-color:var(--cyan);color:#04121f}
+#deck{position:relative;overflow:clip}
+#track{display:flex;transition:transform .35s cubic-bezier(.2,.7,.2,1);will-change:transform}
+.ch{flex:0 0 100%;min-height:calc(100vh - 150px);padding:22px 18px 110px}
+.ch.veyla{background:var(--esp);color:var(--cream)}
+h1{font-size:34px;line-height:1.12;margin:6px 0 10px;letter-spacing:-.01em}
+h2{font-size:26px;line-height:1.15;margin:0 0 8px}
+h3{font-size:19px;margin:0 0 6px}
+p{margin:0 0 12px}
+.eyebrow{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--cyan);font-weight:700;margin-bottom:10px}
+.veyla .eyebrow{color:var(--amber)}
+.lead{font-size:21px;color:#e6eefb}
+.veyla .lead{color:#f7efe2}
+.card{background:var(--navy2);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:16px;margin:12px 0}
+.veyla .card{background:var(--esp2);border-color:rgba(255,255,255,.1)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:14px;padding:16px 20px;font-size:19px;font-weight:700;background:var(--cyan);color:#04121f;text-decoration:none;min-height:54px}
+.btn.ghost{background:transparent;color:var(--white);border:2px solid rgba(255,255,255,.35)}
+.veyla .btn{background:var(--amber);color:#1f1511}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+.stat{background:var(--navy2);border-radius:16px;padding:16px 14px;border:1px solid rgba(255,255,255,.1)}
+.stat b{display:block;font-size:34px;line-height:1;color:var(--cyan)}
+.stat span{font-size:14px;color:var(--muted)}
+.veyla .stat{background:var(--esp2)}
+.veyla .stat b{color:var(--amber)}
+#nav{position:fixed;left:0;right:0;bottom:0;z-index:5;display:flex;gap:10px;padding:12px 14px calc(12px + env(safe-area-inset-bottom));background:linear-gradient(to top,rgba(5,14,30,.95),rgba(5,14,30,.7) 70%,transparent)}
+#nav .btn{flex:1}
+#nav .btn.ghost{flex:0 0 40%}
+.dots{display:flex;justify-content:center;gap:6px;margin:6px 0 0}
+.dots i{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.25)}
+.dots i.on{background:var(--cyan)}
+/* club map */
+.map{position:relative;width:100%;aspect-ratio:1/1.05;background:#0e2448;border-radius:18px;border:1px solid rgba(255,255,255,.12);overflow:hidden}
+.map svg{width:100%;height:100%;display:block}
+.hot{cursor:pointer}
+.hot rect,.hot circle{transition:all .2s}
+.hot.on rect,.hot.on circle{fill:rgba(25,194,255,.28);stroke:var(--cyan)}
+.hot text{fill:#dfe9fa;font-size:11px;font-weight:700;pointer-events:none}
+.pulse{animation:pulse 1.6s ease-out infinite;transform-origin:center}
+@keyframes pulse{0%{opacity:.9;r:4}70%{opacity:0;r:16}100%{opacity:0;r:16}}
+/* timeline */
+.tl{list-style:none;margin:0;padding:0}
+.tl li{position:relative;padding:0 0 0 46px;margin:0 0 10px}
+.tl li::before{content:attr(data-n);position:absolute;left:0;top:2px;width:32px;height:32px;border-radius:50%;background:var(--cyan);color:#04121f;font-weight:800;display:grid;place-items:center;font-size:15px}
+.tl li::after{content:"";position:absolute;left:15px;top:38px;bottom:-10px;width:2px;background:rgba(255,255,255,.14)}
+.tl li:last-child::after{display:none}
+.tl button{width:100%;text-align:left;background:var(--navy2);color:var(--white);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:14px;font-size:18px;font-weight:700}
+.tl .d{display:none;color:var(--muted);padding:8px 14px 2px;font-size:17px}
+.tl li.open .d{display:block}
+.tl li.open button{border-color:var(--cyan)}
+/* who does what */
+.who{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:6px 0 12px}
+.who button{border:1px solid rgba(255,255,255,.2);background:transparent;color:var(--white);border-radius:12px;padding:12px;font-size:17px;font-weight:700}
+.who button.on{background:var(--cyan);color:#04121f;border-color:var(--cyan)}
+.wl{list-style:none;margin:0;padding:0}
+.wl li{padding:9px 0 9px 30px;position:relative;border-top:1px solid rgba(255,255,255,.08);font-size:17px}
+.wl li::before{content:"✓";position:absolute;left:4px;top:8px;color:var(--cyan);font-weight:800}
+.tl li[data-n="✓"]::before{font-size:17px}
+/* questions */
+.qs{list-style:none;margin:0;padding:0;counter-reset:q}
+.qs li{background:var(--navy2);border:1px solid rgba(255,255,255,.1);border-radius:14px;margin:0 0 10px;overflow:hidden}
+.qs label{display:flex;gap:12px;align-items:flex-start;padding:14px;font-weight:700;font-size:18px;cursor:pointer}
+.qs input{width:26px;height:26px;flex:0 0 26px;accent-color:var(--cyan);margin:0}
+.qs li .a{display:none;padding:0 14px 14px 52px;color:var(--muted);font-size:17px}
+.qs li.open .a{display:block}
+.qs li.open{border-color:var(--cyan)}
+/* vs */
+.vs{display:flex;flex-direction:column;border-top:1px solid rgba(255,255,255,.1)}
+.vs button{text-align:left;background:transparent;color:var(--cream);border:0;border-bottom:1px solid rgba(255,255,255,.1);padding:14px 16px;font-size:17px;font-weight:700;display:flex;justify-content:space-between;align-items:center}
+.vs button::after{content:"›";color:var(--amber);font-size:22px}
+.vs button.on{background:#3a2a1c}
+.vsout{padding:16px;display:grid;gap:10px}
+.vsout .o,.vsout .n{border-radius:12px;padding:12px 14px;font-size:16px}
+.vsout .o{background:rgba(255,77,94,.12);border:1px solid rgba(255,77,94,.4)}
+.vsout .n{background:rgba(46,224,122,.1);border:1px solid rgba(46,224,122,.45)}
+.vsout .lbl{display:block;font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:800;margin-bottom:4px;opacity:.8}
+@media (min-width:900px){.vsout{grid-template-columns:1fr 1fr}}
+/* door demo */
+.scene{position:relative;width:100%;aspect-ratio:16/10;background:#140d0a;border-radius:18px;overflow:hidden;border:1px solid rgba(255,255,255,.12)}
+.scene svg{width:100%;height:100%;display:block}
+.alert{position:absolute;left:10px;right:10px;bottom:10px;background:#fff;color:#1a1a1a;border-radius:14px;padding:12px 14px;transform:translateY(130%);transition:transform .45s cubic-bezier(.2,.8,.2,1);box-shadow:0 10px 30px rgba(0,0,0,.4);font-size:15px}
+.alert.show{transform:none}
+.alert .t{font-weight:800;font-size:16px}
+.alert .tag{display:inline-block;font-size:12px;font-weight:800;letter-spacing:.06em;padding:3px 8px;border-radius:999px;color:#fff;margin-bottom:4px}
+.alert .tag.bad{background:var(--bad)}.alert .tag.ok{background:#1b9c52}
+.alert small{color:#555}
+.ctl{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:12px 0}
+.ctl button{border:1px solid rgba(255,255,255,.2);background:var(--esp2);color:var(--cream);border-radius:12px;padding:12px 6px;font-size:15px;font-weight:700;min-height:62px}
+.ctl button.on{border-color:var(--amber);background:#3a2a1c}
+.person{transition:transform 1.6s cubic-bezier(.3,.1,.3,1)}
+.door{transform-origin:116px 70px;transition:transform .5s ease}
+.door.open{transform:rotate(-55deg) skewY(8deg)}
+/* pricing */
+.doors{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0}
+.doors button{border:1px solid rgba(255,255,255,.2);background:var(--esp2);color:var(--cream);border-radius:12px;padding:14px 0;font-size:20px;font-weight:800}
+.doors button.on{background:var(--amber);color:#1f1511;border-color:var(--amber)}
+.price{display:flex;justify-content:space-between;align-items:baseline;gap:14px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.1);font-size:17px}
+.price b{font-size:22px;white-space:nowrap}
+.price.total b{color:var(--amber);font-size:28px}
+.fine{font-size:14px;color:var(--muted)}
+.veyla .fine{color:#cbbda9}
+footer{padding:18px;text-align:center;font-size:13px;color:var(--muted);border-top:1px solid rgba(255,255,255,.08)}
+.in{width:100%}
+.cols{display:block}
+#nav .wrap{display:flex;gap:10px;width:100%}
+@media (min-width:900px){
+ body{font-size:19px}
+ #top .bar,#tabs{max-width:1100px;margin:0 auto;width:100%}
+ #tabs{justify-content:center}
+ .ch{padding:40px 40px 120px}
+ .in{max-width:1100px;margin:0 auto}
+ h1{font-size:46px}h2{font-size:34px}
+ .cols{display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:start}
+ .cols.wide{grid-template-columns:1.2fr 1fr}
+ .stats{grid-template-columns:repeat(4,1fr)}
+ .veyla .stats{grid-template-columns:1fr 1fr}
+ .map{max-width:560px}
+ #nav .wrap{max-width:1100px;margin:0 auto}
+ #nav .btn{flex:0 0 220px}#nav .btn.ghost{flex:0 0 160px}
+ #nav .wrap{justify-content:flex-end}
+}
+</style>
+</head>
+<body>
+<div id="top">
+  <div class="bar"><img src="snapintro-cf-logo-white.png" alt="Centrefit Group"><span class="sp"></span><span class="pg" id="pg">1 / 7</span></div>
+  <div id="tabs"></div>
+</div>
+
+<div id="deck"><div id="track">
+
+<!-- 1 COVER -->
+<section class="ch" data-tab="Welcome">
+  <div class="eyebrow">Centrefit Group × Veyla</div>
+  <h1>Welcome to the Snap family, <span id="club">your new club</span>.</h1>
+  <div class="cols"><div><p class="lead">You're about to open a 24/7 gym. We've helped build more than a hundred of them. This page is a ten-minute tour of what we do, how a Snap build runs, and how Veyla Protect keeps your door honest.</p></div><div>
+  <div class="card"><h3>Prepared for <span id="for">you</span></h3><p style="margin:0">by Mark Pearce, CEO, Centrefit Group Pty Ltd<br><span class="fine">Tap, swipe or use the buttons below. Nothing here commits you to anything.</span></p></div>
+  <div class="row"><button class="btn" onclick="go(1)">Start the tour</button><a class="btn ghost" href="tel:0731885115">Call Mark</a></div></div></div>
+</section>
+
+<!-- 2 ONE TEAM -->
+<section class="ch" data-tab="Who we are">
+  <div class="eyebrow">One team, one phone number</div>
+  <h2>Security and IT for your club, engineered under one roof.</h2>
+  <p class="lead">Centrefit designs, installs and supports everything behind the walls of a Snap club: access control, alarm, CCTV, internet, Wi‑Fi, phones, data cabling and audio visual. One licensed team from the first drawing to opening day, and the same team afterwards.</p>
+  <div class="stats">
+    <div class="stat"><b data-count="100" data-suffix="+">0</b><span>Snap Fitness clubs built in full</span></div>
+    <div class="stat"><b data-count="9">0</b><span>disciplines, one accountable partner</span></div>
+    <div class="stat"><b>24/7</b><span>monitored and supported</span></div>
+    <div class="stat"><b data-count="2014">0</b><span>in business since</span></div>
+  </div>
+  <div class="card"><h3>Approved supplier to Snap Fitness</h3><p style="margin:0">We build to the Snap head‑office standard and work alongside the builders Snap uses most. No subcontractor roulette and no finger‑pointing between vendors. If it has a cable, it's ours.</p></div>
+  <p class="fine">Class 1 &amp; 2 Company Security Licence 4626412 · ASIAL Member 035553 · Brisbane, Queensland</p>
+</section>
+
+<!-- 3 YOUR CLUB -->
+<section class="ch" data-tab="Your club">
+  <div class="eyebrow">Tap around your club</div>
+  <h2>Everything your club needs to think for itself.</h2>
+  <p class="fine">Tap a part of the club to see what Centrefit puts there.</p>
+  <div class="cols wide"><div><div class="map">
+    <svg viewBox="0 0 320 336" id="map">
+      <rect x="8" y="8" width="304" height="320" rx="10" fill="#0a1c3a" stroke="rgba(255,255,255,.25)" stroke-width="2"/>
+      <!-- entry -->
+      <g class="hot" data-k="entry"><rect x="8" y="140" width="46" height="60" rx="8" fill="rgba(255,255,255,.05)" stroke="rgba(255,255,255,.25)"/><circle cx="31" cy="170" r="4" fill="var(--cyan)"/><circle cx="31" cy="170" r="4" fill="var(--cyan)" class="pulse"/><text x="12" y="212">ENTRY</text></g>
+      <!-- reception -->
+      <g class="hot" data-k="reception"><rect x="62" y="20" width="110" height="70" rx="8" fill="rgba(255,255,255,.05)" stroke="rgba(255,255,255,.25)"/><text x="70" y="60">RECEPTION</text></g>
+      <!-- comms -->
+      <g class="hot" data-k="comms"><rect x="180" y="20" width="60" height="70" rx="8" fill="rgba(255,255,255,.05)" stroke="rgba(255,255,255,.25)"/><text x="186" y="60">COMMS</text></g>
+      <!-- amenities -->
+      <g class="hot" data-k="amen"><rect x="248" y="20" width="56" height="70" rx="8" fill="rgba(255,255,255,.05)" stroke="rgba(255,255,255,.25)"/><text x="252" y="60">CHANGE</text></g>
+      <!-- gym floor -->
+      <g class="hot" data-k="floor"><rect x="62" y="100" width="178" height="150" rx="8" fill="rgba(255,255,255,.05)" stroke="rgba(255,255,255,.25)"/><text x="118" y="180">GYM FLOOR</text></g>
+      <!-- studio -->
+      <g class="hot" data-k="studio"><rect x="248" y="100" width="56" height="150" rx="8" fill="rgba(255,255,255,.05)" stroke="rgba(255,255,255,.25)"/><text x="254" y="180">STUDIO</text></g>
+      <!-- back door -->
+      <g class="hot" data-k="back"><rect x="62" y="260" width="242" height="56" rx="8" fill="rgba(255,255,255,.05)" stroke="rgba(255,255,255,.25)"/><circle cx="283" cy="288" r="4" fill="var(--cyan)"/><circle cx="283" cy="288" r="4" fill="var(--cyan)" class="pulse"/><text x="70" y="292">BACK OF HOUSE · BACK DOOR</text></g>
+    </svg>
+  </div>
+  </div><div class="card" id="mapcard"><h3>Start at the front door</h3><p style="margin:0">Tap any room. The two pulsing dots are the doors Veyla Protect watches.</p></div></div>
+</section>
+
+<!-- 4 HOW A BUILD RUNS -->
+<section class="ch" data-tab="Your build">
+  <div class="eyebrow">How a Snap build runs</div>
+  <h2>From your plans to opening day.</h2>
+  <p class="fine">Tap a step to see what happens and what we need from you.</p>
+  <ol class="tl" id="tl">
+    <li data-n="1"><button>Plans in, quote out</button><div class="d">Send us the construction drawings and 3D layout. We mark up every device on the plan and return one quotation covering all disciplines, with the ongoing costs shown up front. You see the full scope online and accept with one tap.</div></li>
+    <li data-n="2"><button>Builder coordination</button><div class="d">We work directly with your builder on wall penetrations, power, the comms room and the ceiling grid, so nothing is missed and nothing is done twice.</div></li>
+    <li data-n="3"><button>Rough‑in</button><div class="d">Cabling goes in before the ceilings close: Cat6A data, CCTV, access control, alarm, speakers and TV points. Certified and labelled.</div></li>
+    <li data-n="4"><button>Internet connected</button><div class="d">Centrefit is an NBN provider as well as the installer. We order the service, supply the router and have the club online before fit‑off, so there's no third party to chase.</div></li>
+    <li data-n="5"><button>Fit‑off and programming</button><div class="d">Readers, cameras, alarm panel, keypads, Wi‑Fi, phones, TVs and audio go on and get programmed to the Snap standard. Veyla Protect cameras go in beside the doors.</div></li>
+    <li data-n="6"><button>Commissioning and handover</button><div class="d">Every device tested, monitoring live with Back2Base, your team shown the apps, and the as‑built documentation handed over.</div></li>
+    <li data-n="7"><button>Opening day and beyond</button><div class="d">The same team answers the phone after you open. Remote support, 24/7 monitoring, and Veyla Protect reporting from day one.</div></li>
+  </ol>
+</section>
+
+<!-- 4b PEACE OF MIND -->
+<section class="ch" data-tab="Compliance &amp; support">
+  <div class="eyebrow">Peace of mind</div>
+  <h2>You look after your members. We look after everything else.</h2>
+  <p class="lead">Opening a club is about getting people through the door and keeping them. The technology, the compliance and the support behind it are our job, and they stay our job after you open.</p>
+  <div class="cols">
+   <div>
+    <div class="card"><h3>Who does what</h3>
+     <div class="who" id="who"><button class="on" data-w="you">You</button><button data-w="us">Centrefit</button></div>
+     <ul class="wl" id="wl"></ul>
+    </div>
+   </div>
+   <div>
+    <ol class="tl" id="pm">
+     <li data-n="✓" class="open"><button>Licensed and compliant</button><div class="d">
+      <p>Class 1 &amp; 2 Company Security Licence 4626412 (Queensland). Every technician carries their own security licence.</p>
+      <p>ASIAL member 035553, working to the ASIAL Code of Professional Conduct.</p>
+      <p>ACMA‑registered cablers for all data and fibre work, with certified, labelled cabling handed over.</p>
+      <p style="margin:0">Systems designed and installed to Australian Standards: AS/NZS 2201.1 for intruder alarms and AS 4806 for CCTV, and aligned with the AUSactive recommendations for unsupervised 24/7 facilities: cameras on entries and exits, never in change rooms, duress monitored by a third party who can call emergency services.</p></div></li>
+     <li data-n="✓"><button>After‑sales and support</button><div class="d">
+      <p>One number, (07) 3188 5115, answered by our Brisbane office. Our team of highly skilled technicians and engineers knows your club, because they built it.</p>
+      <p>Remote support for your alarm, access, cameras, internet and Wi‑Fi, so most issues are fixed without a site visit. 24/7 Back2Base monitoring from day one.</p>
+      <p style="margin:0">Ongoing: moves, adds and changes as your club grows, staff handovers, and Veyla Protect reporting every morning.</p></div></li>
+     <li data-n="✓"><button>Accountability</button><div class="d"><p style="margin:0">One quotation, one installer, one point of contact. If it has a cable in your club, it's ours, and there is never a question of whose problem it is.</p></div></li>
+    </ol>
+   </div>
+  </div>
+</section>
+
+<!-- 4c CHOOSING YOUR INSTALLER -->
+<section class="ch" data-tab="Choosing your installer">
+  <div class="eyebrow">Choosing your installer</div>
+  <h2>Seven questions to ask anyone quoting your club.</h2>
+  <p class="lead">You will get more than one quote. Price is the easy part to compare. These are the questions that decide whether your club runs smoothly for the next ten years. Ask every installer, tick the box when you get a straight answer.</p>
+  <div class="cols">
+   <div><ol class="qs" id="qs">
+    <li><label><input type="checkbox"><span>How many people are on your team, and who turns up if my installer is sick the week before opening?</span></label><div class="a"><b>Centrefit:</b> a Brisbane office, a team of licensed technicians and engineers, and project management across every build. Nobody is a single point of failure, and opening day doesn’t move because one person is unavailable.</div></li>
+    <li><label><input type="checkbox"><span>What is your onboarding procedure, in writing?</span></label><div class="a"><b>Centrefit:</b> a documented Snap build process from plans to handover, a checklist for every stage, a named project contact, and a handover session for your staff. We have done it more than a hundred times.</div></li>
+    <li><label><input type="checkbox"><span>Who do I call at 2 am when the door won’t open, and what happens next?</span></label><div class="a"><b>Centrefit:</b> one number, 24/7 Back2Base monitoring, and remote access to your alarm, access control, cameras, internet and Wi‑Fi. Most faults are fixed without a site visit. If a visit is needed, we have the people to send.</div></li>
+    <li><label><input type="checkbox"><span>What do I get in writing when you hand over?</span></label><div class="a"><b>Centrefit:</b> as‑built drawings, cabling certification, device schedules, user codes handed over securely, and the manuals. If you ever change installer, you can.</div></li>
+    <li><label><input type="checkbox"><span>Does every person on my site hold a security licence, and are you an ASIAL member?</span></label><div class="a"><b>Centrefit:</b> yes to both. Class 1 &amp; 2 Company Security Licence 4626412, every technician licensed, ASIAL member 035553, ACMA‑registered cablers.</div></li>
+    <li><label><input type="checkbox"><span>Who supplies and supports my internet, and do I have to chase a third party?</span></label><div class="a"><b>Centrefit:</b> we are the NBN provider as well as the installer. One bill, one number, no third party to chase, and the club is online before fit‑off.</div></li>
+    <li><label><input type="checkbox"><span>What happens in the 90 days after I open?</span></label><div class="a"><b>Centrefit:</b> follow‑through. Post‑opening check, staff refreshers as your team settles, Veyla Protect reporting every morning, and the same people on the phone who built your club.</div></li>
+   </ol></div>
+   <div>
+    <div class="card"><h3>Score card</h3><p class="lead" id="score">0 of 7 answered</p><p class="fine" style="margin:0">Any installer should be able to answer all seven without hesitating. If the answer to the first one is one person and a ute, keep asking.</p></div>
+    <div class="card"><h3>Why it matters more for a 24/7 club</h3><p style="margin:0">Your club is open when the installer isn’t. A door fault at 11 pm, a camera down over a long weekend, internet dropping out on a Sunday: these are the moments that decide whether your members trust the place. Support is not an extra. It is the product.</p></div>
+   </div>
+  </div>
+</section>
+
+<!-- 5 VEYLA PROTECT -->
+<section class="ch veyla" data-tab="Veyla Protect">
+  <img src="snapintro-veyla-white.svg" alt="Veyla" style="height:54px;margin:0 0 14px">
+  <div class="eyebrow">Tailgating and let‑in detection</div>
+  <h2>Every scan lets one person in. Veyla Protect tells you when it was two.</h2>
+  <p class="lead">A small camera inside the door and a box in your comms room watch every entry and match it to a scan. When the numbers don't line up, the alert and the clip are on your phone within seconds.</p>
+  <div class="cols wide"><div><p class="fine">Tap a button to play the scenario.</p>
+  <div class="scene">
+    <svg viewBox="0 0 320 200" id="scene">
+      <rect width="320" height="200" fill="#160e0b"/>
+      <rect x="0" y="150" width="320" height="50" fill="#221611"/>
+      <text x="14" y="22" fill="#cbbda9" font-size="11" font-weight="700">OUTSIDE</text>
+      <text x="250" y="22" fill="#cbbda9" font-size="11" font-weight="700">INSIDE</text>
+      <rect x="112" y="30" width="8" height="120" fill="#6b5340"/>
+      <rect x="196" y="30" width="8" height="120" fill="#6b5340"/>
+      <rect x="112" y="30" width="92" height="6" fill="#6b5340"/>
+      <!-- reader -->
+      <rect x="96" y="80" width="10" height="18" rx="2" fill="#333" stroke="#777"/><circle id="led" cx="101" cy="86" r="2.5" fill="#444"/>
+      <!-- camera -->
+      <g><rect x="206" y="36" width="20" height="10" rx="3" fill="#ddd"/><circle cx="212" cy="41" r="3" fill="#333"/><text x="208" y="58" fill="#e3a24a" font-size="8" font-weight="800">VEYLA</text></g>
+      <!-- door -->
+      <g id="door" class="door"><rect x="120" y="36" width="76" height="114" fill="#2f6fbe" opacity=".85"/><rect x="128" y="50" width="60" height="70" fill="#8fc4ff" opacity=".35"/></g>
+      <!-- people -->
+      <g id="p1" class="person" transform="translate(40,0)"><circle cx="0" cy="96" r="10" fill="#f3e9d8"/><rect x="-9" y="108" width="18" height="40" rx="6" fill="#f3e9d8"/></g>
+      <g id="p2" class="person" transform="translate(-40,0)"><circle cx="0" cy="96" r="10" fill="#e3a24a"/><rect x="-9" y="108" width="18" height="40" rx="6" fill="#e3a24a"/></g>
+      <text id="cap" x="160" y="186" fill="#cbbda9" font-size="11" text-anchor="middle">Quiet door. Tap a scenario.</text>
+    </svg>
+    <div class="alert" id="alert"><span class="tag bad" id="atag">NEEDS REVIEW</span><div class="t" id="atitle">Two through on one badge</div><div id="abody">Front door · 10:31 pm · clip attached</div><small id="afoot">On your phone 12 seconds after the door closed.</small></div>
+  </div>
+  <div class="ctl">
+    <button onclick="play('ok')">Member scans in</button>
+    <button onclick="play('tail')">Mate tailgates</button>
+    <button onclick="play('letin')">Let in from inside</button>
+  </div></div><div>
+  <div class="stats">
+    <div class="stat"><b>124</b><span>tailgating events caught</span></div>
+    <div class="stat"><b>174</b><span>let‑ins from inside</span></div>
+    <div class="stat"><b>5,195</b><span>entries watched</span></div>
+    <div class="stat"><b>12 s</b><span>door to phone, median</span></div>
+  </div>
+  <p class="fine">31 days at one 24/7 Brisbane franchise club. Roughly ten people a day the access system never knew about.</p>
+  <div class="card"><h3>Built for a Snap club</h3><p>Sits beside your Snap door readers and touches nothing. Fobs, app keys and barcodes all just look like a scan to it.</p><p>Alerts go to the Veyla app on your phone with the clip attached. Review, dismiss, or message the member.</p><p>Staff‑aware, so a busy desk at 6 pm never pages you. Clips kept for 90 days, footage stays with your club.</p><p style="margin:0">Member names on alerts arrive with the Snap head‑office integration, which is in progress. Today you get the door, the time and the clip.</p></div>
+  <div class="card" style="padding:0;overflow:hidden">
+   <div style="padding:16px 16px 0"><h3>Veyla Protect vs the old way</h3><p class="fine" style="margin:0 0 10px">Tap each line to flip it.</p></div>
+   <div class="vs" id="vs">
+    <button data-old="A daily email and a portal you log into, then scroll through videos to find the one that matters." data-new="A push alert on your phone in seconds, with the clip attached. Nothing to log into, nothing to scroll.">Real‑time alerts</button>
+    <button data-old="An overhead sensor counts heads and compares the number to swipes. It doesn’t know what happened at the door." data-new="An AI camera watches the door and tracks each person through it. It knows two came through on one scan, and it has the footage.">How it detects</button>
+    <button data-old="Someone pushes the door open from inside for a mate: typically only flagged after hours, if at all." data-new="Let‑ins from inside are caught 24/7, staff‑aware so a busy desk never pages you.">Let‑in from inside</button>
+    <button data-old="Copy the member’s details and write your own email or text." data-new="One tap sends the notice in your club’s name, with a three‑step escalation ladder built in.">Acting on it</button>
+    <button data-old="One shared login for the whole club. No record of who reviewed or dismissed what." data-new="Every staff member has their own login, their own role, and every action is on the record.">Who’s accountable</button>
+    <button data-old="Footage kept for a couple of weeks, and video links that open without a login." data-new="Clips kept 90 days behind your login. Footage stays with your club.">Your footage</button>
+    <button data-old="Support by web form, from overseas, in another time zone." data-new="Support from the Brisbane team who installed it. One number, and they know your club.">Support</button>
+   </div>
+   <div class="vsout" id="vsout"><span class="lbl">Tap a line above</span></div>
+  </div>
+</div></div>
+</section>
+
+<!-- 6 PRICING -->
+<section class="ch veyla" data-tab="Pricing">
+  <div class="eyebrow">Veyla Protect pricing</div>
+  <h2>One flat monthly fee per club. Hardware once.</h2>
+  <div class="cols"><div><p class="fine">How many doors do you want watched? Most Snap clubs choose two.</p>
+  <div class="doors" id="doors"><button>1</button><button class="on">2</button><button>3</button><button>4</button></div>
+  <div class="card">
+    <div class="price"><span>Protect kit, first door (camera, AI box, mounting)</span><b>$2,695</b></div>
+    <div class="price"><span id="extralbl">1 additional door camera at $495</span><b id="extra">$495</b></div>
+    <div class="price total"><span>Hardware, one‑off</span><b id="hw">$3,190</b></div>
+    <div class="price total"><span>Veyla Protect, per month</span><b>$149</b></div>
+  </div></div><div>
+  <p class="fine">All prices include GST. $149 covers up to four doors on the one club. Installation is quoted by Centrefit on your plans, with the rest of the build. Billing starts the day the system is commissioned.</p>
+  <div class="card"><h3>What it pays for</h3><p style="margin:0">At Snap pricing, one unpaid regular walking in behind a mate every day costs more than Protect does. The first clip usually settles the question.</p></div></div></div>
+</section>
+
+<!-- 7 NEXT -->
+<section class="ch" data-tab="Next steps">
+  <div class="eyebrow">What happens next</div>
+  <h2>Three steps and we're building.</h2>
+  <ol class="tl">
+    <li data-n="1" class="open"><button>Send your plans</button><div class="d">Construction drawings and the 3D layout, whatever stage they're at. Reply to Mark's email with them attached.</div></li>
+    <li data-n="2" class="open"><button>Fifteen minutes with Mark</button><div class="d">A call to go through the club, your opening date and anything specific to your site.</div></li>
+    <li data-n="3" class="open"><button>One quotation, online</button><div class="d">Everything in one place: scope, pricing, ongoing costs and standards. Accept online and we lock in your dates.</div></li>
+  </ol>
+  <div class="row" style="margin-top:12px"><a class="btn" href="tel:0731885115">Call (07) 3188 5115</a><a class="btn ghost" href="mailto:mark@centrefit.com.au?subject=Snap%20Fitness%20build">Email Mark</a></div>
+  <footer style="margin:28px 0 0">Centrefit Group Pty Ltd · ABN 55 168 413 161 · Unit 1, 25 Paisley Drive, Lawnton QLD 4501<br>Security Licence 4626412 · ASIAL Member 035553 · Veyla is a Centrefit Group company<br>Solutions Through Innovation</footer>
+</section>
+
+</div></div>
+
+<div id="nav"><div class="wrap"><button class="btn ghost" id="back" onclick="go(cur-1)">Back</button><button class="btn" id="next" onclick="go(cur+1)">Next</button></div></div>
+
+<script>
+const q=new URLSearchParams(location.search);
+if(q.get('club'))document.getElementById('club').textContent=q.get('club');
+if(q.get('for'))document.getElementById('for').textContent=q.get('for');
+document.querySelectorAll('.ch').forEach(c=>{const w=document.createElement('div');w.className='in';while(c.firstChild)w.appendChild(c.firstChild);c.appendChild(w)});
+const chs=[...document.querySelectorAll('.ch')],track=document.getElementById('track'),tabs=document.getElementById('tabs');
+let cur=0;
+chs.forEach((c,i)=>{const b=document.createElement('button');b.textContent=c.dataset.tab;b.onclick=()=>go(i);tabs.appendChild(b)});
+function go(i){cur=Math.max(0,Math.min(chs.length-1,i));document.getElementById('deck').scrollLeft=0;track.style.transform=`translateX(-${cur*100}%)`;
+  [...tabs.children].forEach((b,j)=>{b.classList.toggle('on',j===cur);if(j===cur)b.scrollIntoView({inline:'center',block:'nearest',behavior:'smooth'})});
+  document.getElementById('pg').textContent=`${cur+1} / ${chs.length}`;
+  document.getElementById('back').style.visibility=cur?'visible':'hidden';
+  document.getElementById('next').textContent=cur===chs.length-1?'Back to start':'Next';
+  if(cur===chs.length-1)document.getElementById('next').onclick=()=>go(0);else document.getElementById('next').onclick=()=>go(cur+1);
+  window.scrollTo({top:0,behavior:'smooth'});
+  const veyla=chs[cur].classList.contains('veyla');document.getElementById('top').style.background=veyla?'rgba(31,21,17,.92)':'rgba(11,29,58,.92)';document.body.style.background=veyla?'var(--esp)':'var(--navy)';
+  if(cur===1)count();}
+document.getElementById('deck').addEventListener('scroll',()=>{document.getElementById('deck').scrollLeft=0});
+go(0);
+// swipe
+let sx=0,sy=0;track.addEventListener('touchstart',e=>{sx=e.touches[0].clientX;sy=e.touches[0].clientY},{passive:true});
+track.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;if(Math.abs(dx)>70&&Math.abs(dx)>Math.abs(dy)*1.5)go(cur+(dx<0?1:-1))});
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight')go(cur+1);if(e.key==='ArrowLeft')go(cur-1)});
+// counters
+let counted=false;function count(){if(counted)return;counted=true;document.querySelectorAll('[data-count]').forEach(el=>{const to=+el.dataset.count,suf=el.dataset.suffix||'',t0=performance.now();const step=t=>{const k=Math.min(1,(t-t0)/1100);el.textContent=Math.round(to*(1-Math.pow(1-k,3)))+(k===1?suf:'');if(k<1)requestAnimationFrame(step)};requestAnimationFrame(step)})}
+// map
+const rooms={
+ entry:['Front entry','Snap member reader and door strike, wired and programmed. Intercom back to reception. The Veyla Protect camera sits just inside, watching every entry 24/7.'],
+ reception:['Reception','Centrefit NBN internet and the club router, Ubiquiti UniFi Wi‑Fi, the Fanvil phone, music source and the TV wall controller. Alarm keypad by the door.'],
+ comms:['Comms room','The Bosch Solution 6000 alarm panel with 24/7 Back2Base monitoring, the CCTV recorder, network switch, Cat6A patching and the Veyla Protect AI box. Everything labelled and certified.'],
+ amen:['Change rooms','Alarm detectors and duress, speakers for background music. No cameras, ever.'],
+ floor:['Gym floor','AI‑powered, NDAA‑compliant Dahua CCTV with full coverage, ceiling speakers and amplifiers for music, TV points and screens, Wi‑Fi throughout, alarm detectors.'],
+ studio:['Studio','Its own audio zone with a wall controller, a separate access reader if you want the studio bookable, display and speakers for classes.'],
+ back:['Back of house and back door','Reader and strike on the back door, CCTV covering the car park approach, and the second Veyla Protect camera, so a door propped open for a mate is caught just like the front.']};
+document.querySelectorAll('#map .hot').forEach(h=>h.addEventListener('click',()=>{document.querySelectorAll('#map .hot').forEach(x=>x.classList.remove('on'));h.classList.add('on');const r=rooms[h.dataset.k];document.getElementById('mapcard').innerHTML=`<h3>${r[0]}</h3><p style="margin:0">${r[1]}</p>`}));
+// who does what
+const WHO={you:['Pre‑sales, tours and sign‑ups','Your members, classes and community','Staffing and rostering','Marketing your opening','Running a great club'],us:['Access control, alarm and 24/7 monitoring','CCTV, Veyla Protect and after‑hours alerts','Internet, Wi‑Fi, phones and data cabling','Music, TVs and audio visual','Compliance, documentation and standards','After‑sales support from our Brisbane office']};
+function who(k){document.querySelectorAll('#who button').forEach(b=>b.classList.toggle('on',b.dataset.w===k));document.getElementById('wl').innerHTML=WHO[k].map(x=>`<li>${x}</li>`).join('')}
+document.querySelectorAll('#who button').forEach(b=>b.addEventListener('click',()=>who(b.dataset.w)));who('you');
+// questions
+const qs=[...document.querySelectorAll('#qs li')];
+qs.forEach(li=>{li.querySelector('label span').addEventListener('click',e=>{e.preventDefault();li.classList.toggle('open')});li.querySelector('input').addEventListener('change',()=>{li.classList.add('open');const n=qs.filter(x=>x.querySelector('input').checked).length;document.getElementById('score').textContent=`${n} of 7 answered`+(n===7?' — that’s what a safe choice looks like.':'')})});
+qs[0].classList.add('open');
+// vs
+document.querySelectorAll('#vs button').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('#vs button').forEach(x=>x.classList.remove('on'));b.classList.add('on');document.getElementById('vsout').innerHTML=`<div class="o"><span class="lbl">The old way</span>${b.dataset.old}</div><div class="n"><span class="lbl">Veyla Protect</span>${b.dataset.new}</div>`}));
+document.querySelector('#vs button').click();
+// timeline
+document.querySelectorAll('#tl li button, #pm li button').forEach(b=>b.addEventListener('click',()=>b.parentElement.classList.toggle('open')));
+// door demo
+const p1=document.getElementById('p1'),p2=document.getElementById('p2'),door=document.getElementById('door'),led=document.getElementById('led'),cap=document.getElementById('cap'),al=document.getElementById('alert');
+let timers=[];const later=(f,ms)=>timers.push(setTimeout(f,ms));
+function reset(){timers.forEach(clearTimeout);timers=[];al.classList.remove('show');door.classList.remove('open');led.setAttribute('fill','#444');p1.style.transform='translate(40px,0)';p2.style.transform='translate(-40px,0)';document.querySelectorAll('.ctl button').forEach(b=>b.classList.remove('on'))}
+function alertCard(kind,title,body,foot){document.getElementById('atag').className='tag '+(kind==='ok'?'ok':'bad');document.getElementById('atag').textContent=kind==='ok'?'ALL GOOD':'NEEDS REVIEW';document.getElementById('atitle').textContent=title;document.getElementById('abody').textContent=body;document.getElementById('afoot').textContent=foot;al.classList.add('show')}
+function play(k){reset();document.querySelectorAll('.ctl button')[{ok:0,tail:1,letin:2}[k]].classList.add('on');
+ if(k==='ok'){cap.textContent='Member scans. One badge, one person.';later(()=>{led.setAttribute('fill','#2ee07a');door.classList.add('open')},600);later(()=>{p1.style.transform='translate(260px,0)'},900);later(()=>{door.classList.remove('open');alertCard('ok','Badge · one through','Front door · 6:12 am · logged, nobody paged','Normal entries never bother you. They just count.')},2600)}
+ if(k==='tail'){cap.textContent='One scan. Two people walk through.';later(()=>{led.setAttribute('fill','#2ee07a');door.classList.add('open')},600);later(()=>{p1.style.transform='translate(250px,0)';p2.style.transform='translate(200px,0)'},900);later(()=>{door.classList.remove('open');alertCard('bad','Two through on one badge','Front door · 10:31 pm · clip attached','On your phone 12 seconds after the door closed.')},2700)}
+ if(k==='letin'){cap.textContent='No scan. The door opens from inside.';p1.style.transform='translate(230px,0)';later(()=>{door.classList.add('open');led.setAttribute('fill','#444')},700);later(()=>{p2.style.transform='translate(250px,0)'},1000);later(()=>{door.classList.remove('open');alertCard('bad','Let in from inside, no scan','Back door · 11:48 pm · clip attached','Your access control logged nothing. Veyla saw the door open from inside.')},2900)}}
+// pricing
+const doorBtns=[...document.querySelectorAll('#doors button')];
+function price(n){doorBtns.forEach((b,i)=>b.classList.toggle('on',i===n-1));const extra=(n-1)*495;document.getElementById('extra').textContent='$'+extra.toLocaleString('en-AU');document.getElementById('extralbl').textContent=n===1?'No additional doors':`${n-1} additional door camera${n>2?'s':''} at $495 each`;document.getElementById('hw').textContent='$'+(2695+extra).toLocaleString('en-AU')}
+doorBtns.forEach((b,i)=>b.addEventListener('click',()=>price(i+1)));price(2);
+</script>
+</body>
+</html>

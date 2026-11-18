@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 684 571" width="684" height="571" role="img" aria-label="Veyla">
+  <title>Veyla</title>
+  <g fill="none" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round">
+    <!-- shackle mark (stroke 26) -->
+    <path stroke-width="26" d="M279 260.5 L279 113 A100 100 0 0 1 479 113 L479 145.5"/>
+    <!-- wordmark (stroke 20) -->
+    <g stroke-width="20">
+      <path d="M10 410 L50 514 L90 410"/>
+      <path d="M227.25 496.1 A52 52 0 1 1 240 462 L136 462"/>
+      <path d="M296 410 L337.5 516"/>
+      <path d="M378.5 410 L319.5 561"/>
+      <path d="M433.5 371 L433.5 514"/>
+      <path d="M606.5 462 A52 52 0 1 1 502.5 462 A52 52 0 1 1 606.5 462"/>
+      <path d="M606.5 410 L606.5 514"/>
+    </g>
+  </g>
+  <circle cx="671" cy="505.5" r="12.75" fill="#FFFFFF"/>
+</svg>
