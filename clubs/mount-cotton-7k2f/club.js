@@ -29,7 +29,7 @@ window.CLUB = {
     <text x="232" y="212" style="fill:#7f93b3;font-size:7px;font-weight:400">Indicative zones only · not a design</text><text x="232" y="220" style="fill:#7f93b3;font-size:7px;font-weight:400">Centrefit Group · plans Rev 02 preliminary</text>`,
     rooms: {
     entry: ['Front entry, Valley Way', 'Your shopfront doors on the Valley Way side. Snap member reader and strike, intercom back to reception, and the Veyla Protect camera just inside, looking back at the door. One camera covers the whole entry, 24/7.', 'clubs/mount-cotton-7k2f/reception.jpg'],
-    reception: ['Reception', 'Your counter from sheet 22. Centrefit NBN internet and the club router, Ubiquiti UniFi Wi‑Fi, the Fanvil phone, music source and the TV wall controller. Alarm keypad within reach of the counter.'],
+    reception: ['Reception', 'Your counter from sheet 22. Nothing of ours clutters it. Wi‑Fi coverage, CCTV over the counter and the entry, and the intercom from the front door answers here.'],
     cardio: ['Cardio and the Snap wall', 'The treadmill and bike bays along the red wall. TV points for every screen in your render, ceiling speakers on their own zone, Wi‑Fi, and CCTV from the reception end through to the amenities.'],
     amen: ['Amenities and sauna', 'Cleaners, ambulant toilets, two showers, PWD and the sauna behind door D01. Alarm detectors and speakers for background music. Duress button outside the sauna door. No cameras, ever.'],
     cubbies: ['Cubbies and the drinking fountain', 'The cubby wall from sheet 23 sits inside CCTV view, because that is where bags go missing. Speaker overhead.'],
@@ -54,7 +54,7 @@ window.CLUB = {
     <text x="12" y="212" style="fill:#7f93b3;font-size:7px;font-weight:400">Indicative zones only · not a design · Centrefit Group · plans Rev 02 preliminary</text>`,
     rooms: {
       stairs: ['Stairs down to the gym floor', 'The landing at the top of the stairs gets an alarm detector and sits in the view of the stairs camera. Tap again to go back down.'],
-      comms: ['Store and comms, 32 m²', 'Your architect has moved the DB up here, so this is where our rack goes: Bosch Solution 6000 panel with 24/7 Back2Base monitoring, the CCTV recorder, network switch, Cat6A patching and the Veyla Protect box. Labelled, certified, out of the way. A Wi‑Fi point up here covers the mezzanine.'],
+      comms: ['Store and comms, 32 m²', 'Your architect has moved the DB up here, so this is where our rack goes: the NBN router and UniFi Wi‑Fi controller, Bosch Solution 6000 panel with 24/7 Back2Base monitoring, the CCTV recorder, network switch, Cat6A patching, the Nightlife Music player and the Veyla Protect box. Labelled, certified, out of the way. A Wi‑Fi point up here covers the mezzanine.'],
       db: ['Relocated DB and our rack', 'Your electrician lands the DB here, our comms rack goes beside it, one power circuit for everything we install. Short cable runs down to the ceiling below.'],
       d08: ['Store door D08', 'Existing door, new hardware per your schedule. Alarm contact on the door so the comms room is never left open unnoticed. A reader if you want it staff‑only.']
     }
@@ -63,12 +63,12 @@ window.CLUB = {
   inclusionsTitle: 'From your drawings',
   inclusions: [
     ['Sheet 05 · Floor plan, 355 m² + 32 m² mezzanine', 'Camera coverage and audio zones designed from this sheet, not guessed.'],
-    ['Sheet 06 · Mezzanine', 'Comms rack and alarm panel beside the relocated DB.'],
+    ['Sheet 06 · Mezzanine', 'Comms rack beside the relocated DB: router, Wi‑Fi controller, alarm panel, recorder, Nightlife Music, Veyla Protect.'],
     ['Sheets 13–14 · Reflected ceiling plans', 'Speakers, detectors and cameras set out to your ceiling grid.'],
     ['Sheets 15–16 · Electrical plans', 'Our data and power points on one marked‑up plan for your electrician.'],
     ['Sheet 20 · Sauna', 'Duress button beside the sauna door.'],
     ['Sheets 17–19 · PWD, WC and showers', 'Detectors and music only. No cameras.'],
-    ['Sheet 22 · Reception counter', 'Phone, keypad, Wi‑Fi and the TV controller at the counter.'],
+    ['Sheet 22 · Reception counter', 'CCTV over the counter and the entry, Wi‑Fi coverage, nothing of ours on the bench.'],
     ['Sheet 23 · Cubbies', 'In camera view.'],
     ['FFE schedule Rev 02 · Dark scheme', 'Black speakers, detectors and readers to suit.'],
     ['3D Virtua render · 16 views', 'Every screen in your render gets a TV point and an audio zone.']
