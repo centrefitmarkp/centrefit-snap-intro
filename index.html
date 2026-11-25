@@ -520,7 +520,7 @@ let needClub=null;const needSlug=()=> (q.get('c')||'generic');const needKey=()=>
 if(q.get('reset')){localStorage.removeItem('snap-sent-'+(q.get('c')||'generic'))}
 function needSent(){return !!localStorage.getItem(needKey())}
 const FSTAT={cd:null,d3:null};const FLBL={upload:'Uploading now',sent:'Already sent to Centrefit',none:'Not available yet'};
-function fsRender(){document.querySelectorAll('.fs').forEach(d=>{const k=d.dataset.f;const n=FILES[k].length;d.querySelectorAll('button').forEach(b=>{b.classList.toggle('on',FSTAT[k]===b.dataset.v);if(b.dataset.v==='upload')b.textContent=n?`${n} attached · add more`:'Upload now'})})}
+function fsRender(){document.querySelectorAll('.fs').forEach(d=>{const k=d.dataset.f;const n=FILES[k].length;d.querySelectorAll('button').forEach(b=>{b.classList.toggle('on',FSTAT[k]===b.dataset.v);if(b.dataset.v==='upload')b.textContent=n?`Add more (${n})`:'Upload now'})})}
 document.querySelectorAll('.fs button').forEach(b=>b.addEventListener('click',()=>{const k=b.closest('.fs').dataset.f,v=b.dataset.v;FSTAT[k]=v;fsRender();needGate();if(v==='upload'){document.getElementById(k==='cd'?'upcd':'up3d').click()}}));
 function needReady(){if(FSTAT.cd===null||FSTAT.d3===null)return false;if((FSTAT.cd==='upload'&&!FILES.cd.length)||(FSTAT.d3==='upload'&&!FILES.d3.length))return false;const em=(document.getElementById('needemail').value||'').trim(),nm=(document.getElementById('needname').value||'').trim();return NEED.every(x=>needAns[x.k])&&!!needAns.tvs&&nm.length>1&&/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)}
 function needGate(){const onNeed=cur===chs.length-1,lock=onNeed&&!needSent();
