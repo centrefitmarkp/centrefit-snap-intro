@@ -66,6 +66,10 @@ p{margin:0 0 12px}
 .qlogo{display:flex;align-items:center;margin:4px 0 12px}
 .qlogo img{height:64px;width:auto;display:block}
 .qlogo.nbn img{height:72px}
+#needwho input{display:block;width:100%;box-sizing:border-box;margin:8px 0 0;padding:14px;border-radius:12px;border:2px solid rgba(255,255,255,.25);background:#0a1c3a;color:#fff;font-size:18px}
+#needwho input:focus{outline:none;border-color:var(--cyan)}
+.btn[disabled],#tabs button[disabled],a.btn.dim{opacity:.3;pointer-events:none;filter:grayscale(1)}
+.btn.sent{background:#1b9c52;color:#fff}
 .map{position:relative;width:100%;aspect-ratio:1/1.05;background:#0e2448;border-radius:18px;border:1px solid rgba(255,255,255,.12);overflow:hidden}
 .map svg{width:100%;height:100%;display:block}
 .hot{cursor:pointer}
@@ -377,7 +381,9 @@ footer{padding:18px;text-align:center;font-size:13px;color:var(--muted);border-t
   <p class="fine" id="needlead">Tap an answer. Nothing here is final, it just means the quote comes back right the first time.</p>
   <div id="need"></div>
   <div class="card"><h3>Your TVs: you buy them, we do everything else.</h3><p style="margin:0">We supply and fit the brackets, the power and data points, the cabling and the commissioning for every screen on your plans. The screens themselves you buy from a retailer of your choice. That's deliberate. Screens in a 24/7 club run far longer than any manufacturer's warranty allows for a reseller, so buying retail puts you under Australian Consumer Law guarantees, which are stronger than anything we could pass on. We'll give you the exact sizes and the spec to buy before fit‑off.</p></div>
-  <div class="row" style="margin-top:12px"><a class="btn" id="needsend" href="mailto:sales@centrefit.com.au?subject=Snap%20Fitness%20build">Send my answers</a><a class="btn ghost" href="tel:0731885115">Call Sales</a></div>
+  <div class="card" id="needwho"><h3>Who's answering</h3><p style="margin:0 0 8px" class="fine">So the right person gets the quote.</p><input id="needname" type="text" placeholder="Your name" autocomplete="name"><input id="needemail" type="email" placeholder="Your email address" autocomplete="email"></div>
+  <div class="row" style="margin-top:12px"><button class="btn" id="needsend" disabled>Send my answers</button><a class="btn ghost" id="needcall" href="tel:0731885115">Call Sales</a></div>
+  <p class="fine" id="needstatus">Answer every question and add your name and email, then send. Until then the rest of the page waits.</p>
 </section>
 
 </div></div>
@@ -474,10 +480,25 @@ function needBuild(C){
   studios.forEach(st=>NEED.push({k:'audio-'+st.toLowerCase().replace(/[^a-z]+/g,'-'),h:`Separate music in the ${st}?`,p:`Your plans show a ${st}. An extra audio zone gives it its own music and volume, independent of the gym floor, with a wall controller in the room.`,a:['Yes, extra audio zone','No, same music as the floor']}));
   if(!NEED.length){box.innerHTML=`<div class="card"><h3>Nothing to decide yet.</h3><p style="margin:0">${C?'Your plans don’t show a group fitness, Pilates, recovery or yoga studio, so there is no extra audio zone to choose.':'Once we have your plans, any choices that depend on them show up here.'} We confirm the rest with you at the site walk.</p></div>`;return}
   box.innerHTML=NEED.map(q=>`<div class="q" data-k="${q.k}"><h3>${q.h}</h3><p>${q.p}</p>${q.logo||''}<div class="ans">${q.a.map((t,i)=>`<button data-i="${i}">${t}</button>`).join('')}</div></div>`).join('');
-  box.querySelectorAll('.q').forEach(qd=>qd.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{qd.querySelectorAll('button').forEach(x=>x.classList.remove('on'));b.classList.add('on');needAns[qd.dataset.k]=b.textContent;needMail(C)})));
+  box.querySelectorAll('.q').forEach(qd=>qd.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{qd.querySelectorAll('button').forEach(x=>x.classList.remove('on'));b.classList.add('on');needAns[qd.dataset.k]=b.textContent;needGate()})));
 }
-function needMail(C){const name=(C&&C.name)||document.getElementById('club').textContent;const lines=NEED.map(q=>`${q.h} ${needAns[q.k]||'(not answered)'}`);document.getElementById('needsend').href=`mailto:sales@centrefit.com.au?subject=${encodeURIComponent(name+' - my answers')}&body=${encodeURIComponent('Hi Centrefit team,\n\n'+lines.join('\n')+'\n\n'+name)}`}
-needBuild(null);
+const NEED_ENDPOINT='https://cortex.veyla.com.au/api/snap-answers'; // Mitchell to ship; until then the mailto fallback opens their mail app
+let needClub=null;const needSlug=()=> (q.get('c')||'generic');const needKey=()=>'snap-sent-'+needSlug();
+function needSent(){return !!localStorage.getItem(needKey())}
+function needReady(){const em=(document.getElementById('needemail').value||'').trim(),nm=(document.getElementById('needname').value||'').trim();return NEED.every(x=>needAns[x.k])&&nm.length>1&&/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)}
+function needGate(){const onNeed=cur===chs.length-1,lock=onNeed&&!needSent();
+  document.getElementById('back').disabled=lock;document.getElementById('next').disabled=lock;[...tabs.children].forEach(b=>b.disabled=lock);document.getElementById('needcall').classList.toggle('dim',lock);
+  const sb=document.getElementById('needsend');if(needSent()){sb.disabled=true;sb.classList.add('sent');sb.textContent='Answers sent ✓';document.getElementById('needstatus').textContent='Thanks, your answers are with our Sales Team. You can keep browsing.';document.querySelectorAll('#need button,#needwho input').forEach(x=>x.disabled=true)}else{sb.disabled=!needReady()}}
+function needMail(C){needClub=C}
+function needPayload(){const name=document.getElementById('needname').value.trim(),email=document.getElementById('needemail').value.trim(),club=(needClub&&needClub.name)||document.getElementById('club').textContent;return {club,slug:needSlug(),name,email,answers:NEED.map(x=>({question:x.h,answer:needAns[x.k]})),link:location.href,sent:new Date().toISOString()}}
+async function needSend(){const sb=document.getElementById('needsend');sb.disabled=true;sb.textContent='Sending…';const P=needPayload();let ok=false;
+  try{const r=await fetch(NEED_ENDPOINT,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(P)});ok=r.ok}catch(e){ok=false}
+  if(!ok){const lines=[`Club: ${P.club}`,`Name: ${P.name}`,`Email: ${P.email}`,'',...P.answers.map(a=>`${a.question} ${a.answer}`),'',P.link];location.href=`mailto:sales@centrefit.com.au,purchasing@centrefit.com.au?subject=${encodeURIComponent(P.club+' - answers from '+P.name)}&body=${encodeURIComponent(lines.join('\n'))}`}
+  localStorage.setItem(needKey(),ok?'api':'mail');needGate()}
+document.getElementById('needsend').addEventListener('click',needSend);
+['needname','needemail'].forEach(id=>document.getElementById(id).addEventListener('input',needGate));
+const _go=go;go=function(i){_go(i);needGate()};
+needBuild(null);needGate();
 </script>
 </body>
 </html>
