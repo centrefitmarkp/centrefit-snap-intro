@@ -432,7 +432,7 @@ doorBtns.forEach((b,i)=>b.addEventListener('click',()=>price(i+1)));price(2);
 function bindMap(){document.querySelectorAll('#map .hot').forEach(h=>h.addEventListener('click',()=>{document.querySelectorAll('#map .hot').forEach(x=>x.classList.remove('on'));h.classList.add('on');const r=rooms[h.dataset.k];document.getElementById('mapcard').innerHTML=`<h3>${r[0]}</h3><p style="margin:0">${r[1]}</p>`+(r[2]?`<img src="${r[2]}" alt="">`:'')}))}
 function applyClub(C){
   document.getElementById('club').textContent=C.name;document.getElementById('for').textContent=C.owner;document.title=C.name+' · Centrefit Group × Veyla';
-  const w=chs[0].querySelector('.in');const cov=document.createElement('div');cov.className='cover';cov.innerHTML=`<img src="${C.cover}" alt="${C.name}"><div class="cap">${C.coverCaption}</div>`;w.insertBefore(cov,w.querySelector('.cols'));
+  const w=chs[0].querySelector('.in');const cov=document.createElement('div');cov.className='cover';cov.innerHTML=`<img src="${C.cover}" alt="${C.name}">`;const cap=document.createElement('p');cap.className='lead';cap.textContent=C.coverCaption;w.insertBefore(cov,w.querySelector('.cols'));w.insertBefore(cap,w.querySelector('.cols'));
   const yc=chs[2].querySelector('.in');yc.querySelector('h2').textContent=C.mapTitle;yc.querySelector('p.fine').textContent=C.mapLead;
   const svg=document.getElementById('map');svg.setAttribute('viewBox','0 0 400 230');svg.innerHTML=C.svg;svg.parentElement.style.aspectRatio='400/230';
   Object.keys(rooms).forEach(k=>delete rooms[k]);Object.assign(rooms,C.rooms);bindMap();
