@@ -63,6 +63,10 @@ p{margin:0 0 12px}
 .need .ans{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .need .ans button{background:transparent;color:var(--white);border:2px solid rgba(255,255,255,.3);border-radius:12px;padding:12px;font-size:17px;font-weight:700}
 .need .ans button.on{background:var(--cyan);color:#04121f;border-color:var(--cyan)}
+.qlogo{display:flex;align-items:center;margin:4px 0 12px}
+.qlogo img{height:64px;width:auto;display:block}
+.qlogo.nbn{background:#fff;border-radius:12px;padding:10px 16px;width:max-content}
+.qlogo.nbn img{height:56px}
 .map{position:relative;width:100%;aspect-ratio:1/1.05;background:#0e2448;border-radius:18px;border:1px solid rgba(255,255,255,.12);overflow:hidden}
 .map svg{width:100%;height:100%;display:block}
 .hot{cursor:pointer}
@@ -465,11 +469,11 @@ const NEED=[];const needAns={};
 function needBuild(C){
   const box=document.getElementById('need');box.className='need';NEED.length=0;
   const studios=(C&&C.studios)||[];
-  NEED.push({k:'internet',h:'Internet and cabling by Centrefit?',p:'Do you want Centrefit to run the necessary cables and organise your internet connection in your facility? Normally a speed of 100 Mbps download and 40 Mbps upload suits a facility like yours. We will take care of the heavy lifting and communicate with NBN on your behalf. Nothing you need to do.',a:['Yes, Centrefit does it','No, I have my own']});
-  NEED.push({k:'protect',h:'Veyla Protect tailgating system?',p:'Do you want our Veyla Protect tailgating system? This presentation outlines the product\'s capabilities; we just need your go ahead. For more research, here is the website for the complete Veyla system: <a href="https://veyla.com.au" target="_blank" rel="noopener" style="color:var(--cyan)">veyla.com.au</a>',a:['Yes, include Veyla Protect','Not now']});
+  NEED.push({k:'internet',h:'Internet and cabling by Centrefit?',p:'Do you want Centrefit to run the necessary cables and organise your internet connection in your facility? Normally a speed of 100 Mbps download and 40 Mbps upload suits a facility like yours. We will take care of the heavy lifting and communicate with NBN on your behalf. Nothing you need to do.',a:['Yes, Centrefit does it','No, I have my own'],logo:'<div class="qlogo nbn"><img src="nbn-logo.png" alt="nbn"></div><div class="fine" style="font-size:12px">nbn™ and other nbn logos and brands are trade marks of NBN Co Limited and used under licence.</div>'});
+  NEED.push({k:'protect',h:'Veyla Protect tailgating system?',p:'Do you want our Veyla Protect tailgating system? This presentation outlines the product\'s capabilities; we just need your go ahead. For more research, here is the website for the complete Veyla system: <a href="https://veyla.com.au" target="_blank" rel="noopener" style="color:var(--cyan)">veyla.com.au</a>',a:['Yes, include Veyla Protect','Not now'],logo:'<div class="qlogo"><img src="snapintro-veyla-white.svg" alt="Veyla"></div>'});
   studios.forEach(st=>NEED.push({k:'audio-'+st.toLowerCase().replace(/[^a-z]+/g,'-'),h:`Separate music in the ${st}?`,p:`Your plans show a ${st}. An extra audio zone gives it its own music and volume, independent of the gym floor, with a wall controller in the room.`,a:['Yes, extra audio zone','No, same music as the floor']}));
   if(!NEED.length){box.innerHTML=`<div class="card"><h3>Nothing to decide yet.</h3><p style="margin:0">${C?'Your plans don’t show a group fitness, Pilates, recovery or yoga studio, so there is no extra audio zone to choose.':'Once we have your plans, any choices that depend on them show up here.'} We confirm the rest with you at the site walk.</p></div>`;return}
-  box.innerHTML=NEED.map(q=>`<div class="q" data-k="${q.k}"><h3>${q.h}</h3><p>${q.p}</p><div class="ans">${q.a.map((t,i)=>`<button data-i="${i}">${t}</button>`).join('')}</div></div>`).join('');
+  box.innerHTML=NEED.map(q=>`<div class="q" data-k="${q.k}"><h3>${q.h}</h3><p>${q.p}</p>${q.logo||''}<div class="ans">${q.a.map((t,i)=>`<button data-i="${i}">${t}</button>`).join('')}</div></div>`).join('');
   box.querySelectorAll('.q').forEach(qd=>qd.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{qd.querySelectorAll('button').forEach(x=>x.classList.remove('on'));b.classList.add('on');needAns[qd.dataset.k]=b.textContent;needMail(C)})));
 }
 function needMail(C){const name=(C&&C.name)||document.getElementById('club').textContent;const lines=NEED.map(q=>`${q.h} ${needAns[q.k]||'(not answered)'}`);document.getElementById('needsend').href=`mailto:sales@centrefit.com.au?subject=${encodeURIComponent(name+' - my answers')}&body=${encodeURIComponent('Hi Centrefit team,\n\n'+lines.join('\n')+'\n\n'+name)}`}
