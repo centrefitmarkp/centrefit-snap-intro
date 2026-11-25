@@ -89,6 +89,11 @@ p{margin:0 0 12px}
 .fs .ans{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
 .fs .ans button{text-align:center;font-size:17px;padding:12px 8px;width:100%;background:transparent;color:var(--white);border:2px solid rgba(255,255,255,.3);border-radius:12px;font-weight:700}
 .fs .ans button.on{background:var(--cyan);color:#04121f;border-color:var(--cyan)}
+.cfsum{list-style:none;margin:8px 0 0;padding:0}
+.cfsum li{display:grid;grid-template-columns:1fr;gap:2px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.12);font-size:16px}
+.cfsum li span{color:var(--muted);font-size:14px}
+.cfsum li b{color:var(--white)}
+@media (min-width:700px){.cfsum li{grid-template-columns:1fr 1fr;align-items:baseline}}
 .map{position:relative;width:100%;aspect-ratio:1/1.05;background:#0e2448;border-radius:18px;border:1px solid rgba(255,255,255,.12);overflow:hidden}
 .map svg{width:100%;height:100%;display:block}
 .hot{cursor:pointer}
@@ -406,7 +411,7 @@ footer{padding:18px;text-align:center;font-size:13px;color:var(--muted);border-t
     <div class="fine">Up to 25 MB per file. Your files go with your answers when you press Send.</div></div>
   <div class="card" id="needwho"><h3>Who's answering</h3><p style="margin:0 0 8px" class="fine">So the right person gets the quote.</p><input id="needname" type="text" placeholder="Your name" autocomplete="name"><input id="needemail" type="email" placeholder="Your email address" autocomplete="email"></div>
   <div class="row" style="margin-top:12px"><button class="btn" id="needsend" disabled>Send my answers</button><a class="btn ghost" id="needcall" href="tel:0731885115">Call Sales</a></div>
-  <div id="needconfirm"><h3 style="margin:0">Are your details correct?</h3><p class="fine" style="margin:4px 0 8px">Our quote goes to this name and email, so please check the spelling.</p><div class="who" id="cfname"></div><div class="who" id="cfemail"></div><div class="typo" id="cftypo"></div><button id="needyes" type="button">Yes, my details are correct. Send.</button><button id="needfix" type="button">No, let me fix them</button></div>
+  <div id="needconfirm"><h3 style="margin:0">Is everything correct?</h3><p class="fine" style="margin:4px 0 8px">This is what we will quote from. Check each answer, then check your name and email, because that is where the quote goes.</p><ul class="cfsum" id="cfsum"></ul><div class="fine" style="margin:10px 0 2px;letter-spacing:.1em;text-transform:uppercase;font-weight:700">Your details</div><div class="who" id="cfname"></div><div class="who" id="cfemail"></div><div class="typo" id="cftypo"></div><button id="needyes" type="button">Yes, all correct. Send.</button><button id="needfix" type="button">No, let me change something</button></div>
   <p class="fine" id="needstatus">Answer every question, tell us where your files are, add your name and email, then send. Until then the rest of the page waits.</p>
 </section>
 
@@ -535,12 +540,12 @@ async function needSend(){const sb=document.getElementById('needsend');sb.disabl
 const TYPO={'gmial.com':'gmail.com','gmai.com':'gmail.com','gmail.co':'gmail.com','gmal.com':'gmail.com','gamil.com':'gmail.com','gmail.con':'gmail.com','hotmial.com':'hotmail.com','hotmail.con':'hotmail.com','hotmai.com':'hotmail.com','outlok.com':'outlook.com','outlook.con':'outlook.com','yaho.com':'yahoo.com','yahoo.con':'yahoo.com','bigpond.con':'bigpond.com','bigpnd.com':'bigpond.com','iclod.com':'icloud.com','icloud.con':'icloud.com','live.con':'live.com','.com.ua':'.com.au'};
 function emailHint(e){const d=(e.split('@')[1]||'').toLowerCase();if(TYPO[d])return d.replace(d,TYPO[d]);if(/\.com\.ua$/.test(d))return d.replace(/\.com\.ua$/,'.com.au');if(/\.(con|cmo|ocm)$/.test(d))return d.replace(/\.(con|cmo|ocm)$/,'.com');return null}
 document.getElementById('needsend').addEventListener('click',()=>{const nm=document.getElementById('needname').value.trim(),em=document.getElementById('needemail').value.trim();
-  document.getElementById('cfname').textContent=nm;document.getElementById('cfemail').textContent=em;const h=emailHint(em);
+  document.getElementById('cfsum').innerHTML=needPayload().answers.map(x=>`<li><span>${x.question}</span><b>${x.answer}</b></li>`).join('');document.getElementById('cfname').textContent=nm;document.getElementById('cfemail').textContent=em;const h=emailHint(em);
   document.getElementById('cftypo').textContent=h?`Did you mean @${h}? Tap "No, let me fix them" if so.`:'';
   const c=document.getElementById('needconfirm');c.classList.add('show');document.getElementById('needsend').disabled=true;c.scrollIntoView({behavior:'smooth',block:'center'})});
 ['needname','needemail'].forEach(id=>document.getElementById(id).addEventListener('input',()=>document.getElementById('needconfirm').classList.remove('show')));
 document.getElementById('needyes').addEventListener('click',()=>{document.getElementById('needconfirm').classList.remove('show');needSend()});
-document.getElementById('needfix').addEventListener('click',()=>{document.getElementById('needconfirm').classList.remove('show');needGate();const n=document.getElementById('needname');n.scrollIntoView({behavior:'smooth',block:'center'});n.focus()});
+document.getElementById('needfix').addEventListener('click',()=>{document.getElementById('needconfirm').classList.remove('show');needGate();document.getElementById('need').scrollIntoView({behavior:'smooth',block:'start'})});
 ['needname','needemail'].forEach(id=>document.getElementById(id).addEventListener('input',needGate));
 const _go=go;go=function(i){_go(i);needGate()};
 needBuild(null);needGate();
