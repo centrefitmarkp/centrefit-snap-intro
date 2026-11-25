@@ -62,6 +62,8 @@ p{margin:0 0 12px}
 .need .q p{margin:0 0 10px;color:var(--muted);font-size:16px}
 .need .ans{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .need .ans button{background:transparent;color:var(--white);border:2px solid rgba(255,255,255,.3);border-radius:12px;padding:12px;font-size:17px;font-weight:700}
+#tvack{background:transparent;color:var(--white);border:2px solid rgba(255,255,255,.3);border-radius:12px;padding:12px;font-size:17px;font-weight:700;width:100%;margin-top:12px}
+#tvack.on{background:var(--cyan);color:#04121f;border-color:var(--cyan)}
 .need .ans button.on{background:var(--cyan);color:#04121f;border-color:var(--cyan)}
 .qlogo{display:flex;align-items:center;margin:4px 0 12px}
 .qlogo img{height:64px;width:auto;display:block}
@@ -380,7 +382,7 @@ footer{padding:18px;text-align:center;font-size:13px;color:var(--muted);border-t
   <h2>A few quick decisions, then we quote.</h2>
   <p class="fine" id="needlead">Tap an answer. Nothing here is final, it just means the quote comes back right the first time.</p>
   <div id="need"></div>
-  <div class="card"><h3>Your TVs: you buy them, we do everything else.</h3><p style="margin:0">We supply and fit the brackets, the power and data points, the cabling and the commissioning for every screen on your plans. The screens themselves you buy from a retailer of your choice. That's deliberate. Screens in a 24/7 club run far longer than any manufacturer's warranty allows for a reseller, so buying retail puts you under Australian Consumer Law guarantees, which are stronger than anything we could pass on. We'll give you the exact sizes and the spec to buy before fit‑off.</p></div>
+  <div class="card"><h3>Your TVs: you buy them, we do everything else.</h3><p style="margin:0">We supply and fit the brackets, the power and data points, the cabling and the commissioning for every screen on your plans. The screens themselves you buy from a retailer of your choice. That's deliberate. Screens in a 24/7 club run far longer than any manufacturer's warranty allows for a reseller, so buying retail puts you under Australian Consumer Law guarantees, which are stronger than anything we could pass on. We'll give you the exact sizes and the spec to buy before fit‑off.</p><button id="tvack" type="button">Yes, I agree and understand</button></div>
   <div class="card" id="needwho"><h3>Who's answering</h3><p style="margin:0 0 8px" class="fine">So the right person gets the quote.</p><input id="needname" type="text" placeholder="Your name" autocomplete="name"><input id="needemail" type="email" placeholder="Your email address" autocomplete="email"></div>
   <div class="row" style="margin-top:12px"><button class="btn" id="needsend" disabled>Send my answers</button><a class="btn ghost" id="needcall" href="tel:0731885115">Call Sales</a></div>
   <p class="fine" id="needstatus">Answer every question and add your name and email, then send. Until then the rest of the page waits.</p>
@@ -484,16 +486,17 @@ function needBuild(C){
   box.innerHTML=NEED.map(q=>`<div class="q" data-k="${q.k}"><h3>${q.h}</h3><p>${q.p}</p>${q.logo||''}<div class="ans">${q.a.map((t,i)=>`<button data-i="${i}">${t}</button>`).join('')}</div></div>`).join('');
   box.querySelectorAll('.q').forEach(qd=>qd.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{qd.querySelectorAll('button').forEach(x=>x.classList.remove('on'));b.classList.add('on');needAns[qd.dataset.k]=b.textContent;needGate()})));
 }
+document.getElementById('tvack').addEventListener('click',e=>{const b=e.currentTarget;const on=!b.classList.contains('on');b.classList.toggle('on',on);if(on)needAns.tvs=b.textContent;else delete needAns.tvs;needGate()});
 const NEED_ENDPOINT='https://cortex.veyla.com.au/api/snap-answers'; // Mitchell to ship; until then the mailto fallback opens their mail app
 let needClub=null;const needSlug=()=> (q.get('c')||'generic');const needKey=()=>'snap-sent-'+needSlug();
 if(q.get('reset')){localStorage.removeItem('snap-sent-'+(q.get('c')||'generic'))}
 function needSent(){return !!localStorage.getItem(needKey())}
-function needReady(){const em=(document.getElementById('needemail').value||'').trim(),nm=(document.getElementById('needname').value||'').trim();return NEED.every(x=>needAns[x.k])&&nm.length>1&&/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)}
+function needReady(){const em=(document.getElementById('needemail').value||'').trim(),nm=(document.getElementById('needname').value||'').trim();return NEED.every(x=>needAns[x.k])&&!!needAns.tvs&&nm.length>1&&/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)}
 function needGate(){const onNeed=cur===chs.length-1,lock=onNeed&&!needSent();
   document.getElementById('back').disabled=lock;document.getElementById('next').disabled=lock;[...tabs.children].forEach(b=>b.disabled=lock);document.getElementById('needcall').classList.toggle('dim',lock);
-  const sb=document.getElementById('needsend');if(needSent()){sb.disabled=true;sb.classList.add('sent');sb.textContent='Answers sent ✓';document.getElementById('needstatus').textContent='Thanks, your answers are with our Sales Team. You can keep browsing.';document.querySelectorAll('#need button,#needwho input').forEach(x=>x.disabled=true)}else{sb.disabled=!needReady()}}
+  const sb=document.getElementById('needsend');if(needSent()){sb.disabled=true;sb.classList.add('sent');sb.textContent='Answers sent ✓';document.getElementById('needstatus').textContent='Thanks, your answers are with our Sales Team. You can keep browsing.';document.querySelectorAll('#need button,#needwho input,#tvack').forEach(x=>x.disabled=true)}else{sb.disabled=!needReady()}}
 function needMail(C){needClub=C}
-function needPayload(){const name=document.getElementById('needname').value.trim(),email=document.getElementById('needemail').value.trim(),club=(needClub&&needClub.name)||document.getElementById('club').textContent;return {club,slug:needSlug(),name,email,answers:NEED.map(x=>({question:x.h,answer:needAns[x.k]})),link:location.href,sent:new Date().toISOString()}}
+function needPayload(){const name=document.getElementById('needname').value.trim(),email=document.getElementById('needemail').value.trim(),club=(needClub&&needClub.name)||document.getElementById('club').textContent;return {club,slug:needSlug(),name,email,answers:NEED.map(x=>({question:x.h,answer:needAns[x.k]})).concat([{question:'Your TVs: you buy them, we do everything else.',answer:needAns.tvs||''}]),link:location.href,sent:new Date().toISOString()}}
 async function needSend(){const sb=document.getElementById('needsend');sb.disabled=true;sb.textContent='Sending…';const P=needPayload();let ok=false;
   try{const r=await fetch(NEED_ENDPOINT,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(P)});ok=r.ok}catch(e){ok=false}
   if(!ok){const lines=[`Club: ${P.club}`,`Name: ${P.name}`,`Email: ${P.email}`,'',...P.answers.map(a=>`${a.question} ${a.answer}`),'',P.link];location.href=`mailto:sales@centrefit.com.au,purchasing@centrefit.com.au?subject=${encodeURIComponent(P.club+' - answers from '+P.name)}&body=${encodeURIComponent(lines.join('\n'))}`}
