@@ -63,6 +63,12 @@ p{margin:0 0 12px}
 .need .ans{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .need .ans button{background:transparent;color:var(--white);border:2px solid rgba(255,255,255,.3);border-radius:12px;padding:12px;font-size:17px;font-weight:700}
 #tvack{background:transparent;color:var(--white);border:2px solid rgba(255,255,255,.3);border-radius:12px;padding:12px;font-size:17px;font-weight:700;width:100%;margin-top:12px}
+#needconfirm{display:none;border:2px solid var(--warn);border-radius:16px;padding:16px;margin-top:12px;background:rgba(255,176,32,.08)}
+#needconfirm.show{display:block}
+#needconfirm .who{font-size:20px;font-weight:700;word-break:break-all;margin:6px 0}
+#needconfirm .typo{color:var(--warn);font-weight:700;margin:8px 0}
+#needyes{background:var(--warn);color:#1a1200;border:0;border-radius:12px;padding:14px;font-size:17px;font-weight:800;width:100%;margin-top:10px}
+#needfix{background:transparent;color:var(--white);border:2px solid rgba(255,255,255,.35);border-radius:12px;padding:12px;font-size:16px;font-weight:700;width:100%;margin-top:8px}
 #tvack.on{background:var(--cyan);color:#04121f;border-color:var(--cyan)}
 .need .ans button.on{background:var(--cyan);color:#04121f;border-color:var(--cyan)}
 .qlogo{display:flex;align-items:center;margin:4px 0 12px}
@@ -385,6 +391,7 @@ footer{padding:18px;text-align:center;font-size:13px;color:var(--muted);border-t
   <div class="card"><h3>Your TVs: you buy them, we do everything else.</h3><p style="margin:0">We supply and fit the brackets, the power and data points, the cabling and the commissioning for every screen on your plans. The screens themselves you buy from a retailer of your choice. That's deliberate. Screens in a 24/7 club run far longer than any manufacturer's warranty allows for a reseller, so buying retail puts you under Australian Consumer Law guarantees, which are stronger than anything we could pass on. We'll give you the exact sizes and the spec to buy before fit‑off.</p><button id="tvack" type="button">Yes, I agree and understand</button></div>
   <div class="card" id="needwho"><h3>Who's answering</h3><p style="margin:0 0 8px" class="fine">So the right person gets the quote.</p><input id="needname" type="text" placeholder="Your name" autocomplete="name"><input id="needemail" type="email" placeholder="Your email address" autocomplete="email"></div>
   <div class="row" style="margin-top:12px"><button class="btn" id="needsend" disabled>Send my answers</button><a class="btn ghost" id="needcall" href="tel:0731885115">Call Sales</a></div>
+  <div id="needconfirm"><h3 style="margin:0">Are your details correct?</h3><p class="fine" style="margin:4px 0 8px">Our quote goes to this name and email, so please check the spelling.</p><div class="who" id="cfname"></div><div class="who" id="cfemail"></div><div class="typo" id="cftypo"></div><button id="needyes" type="button">Yes, my details are correct. Send.</button><button id="needfix" type="button">No, let me fix them</button></div>
   <p class="fine" id="needstatus">Answer every question and add your name and email, then send. Until then the rest of the page waits.</p>
 </section>
 
@@ -501,7 +508,15 @@ async function needSend(){const sb=document.getElementById('needsend');sb.disabl
   try{const r=await fetch(NEED_ENDPOINT,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(P)});ok=r.ok}catch(e){ok=false}
   if(!ok){const lines=[`Club: ${P.club}`,`Name: ${P.name}`,`Email: ${P.email}`,'',...P.answers.map(a=>`${a.question} ${a.answer}`),'',P.link];location.href=`mailto:sales@centrefit.com.au,purchasing@centrefit.com.au?subject=${encodeURIComponent(P.club+' - answers from '+P.name)}&body=${encodeURIComponent(lines.join('\n'))}`}
   localStorage.setItem(needKey(),ok?'api':'mail');needGate()}
-document.getElementById('needsend').addEventListener('click',needSend);
+const TYPO={'gmial.com':'gmail.com','gmai.com':'gmail.com','gmail.co':'gmail.com','gmal.com':'gmail.com','gamil.com':'gmail.com','gmail.con':'gmail.com','hotmial.com':'hotmail.com','hotmail.con':'hotmail.com','hotmai.com':'hotmail.com','outlok.com':'outlook.com','outlook.con':'outlook.com','yaho.com':'yahoo.com','yahoo.con':'yahoo.com','bigpond.con':'bigpond.com','bigpnd.com':'bigpond.com','iclod.com':'icloud.com','icloud.con':'icloud.com','live.con':'live.com','.com.ua':'.com.au'};
+function emailHint(e){const d=(e.split('@')[1]||'').toLowerCase();if(TYPO[d])return d.replace(d,TYPO[d]);if(/\.com\.ua$/.test(d))return d.replace(/\.com\.ua$/,'.com.au');if(/\.(con|cmo|ocm)$/.test(d))return d.replace(/\.(con|cmo|ocm)$/,'.com');return null}
+document.getElementById('needsend').addEventListener('click',()=>{const nm=document.getElementById('needname').value.trim(),em=document.getElementById('needemail').value.trim();
+  document.getElementById('cfname').textContent=nm;document.getElementById('cfemail').textContent=em;const h=emailHint(em);
+  document.getElementById('cftypo').textContent=h?`Did you mean @${h}? Tap "No, let me fix them" if so.`:'';
+  const c=document.getElementById('needconfirm');c.classList.add('show');document.getElementById('needsend').disabled=true;c.scrollIntoView({behavior:'smooth',block:'center'})});
+['needname','needemail'].forEach(id=>document.getElementById(id).addEventListener('input',()=>document.getElementById('needconfirm').classList.remove('show')));
+document.getElementById('needyes').addEventListener('click',()=>{document.getElementById('needconfirm').classList.remove('show');needSend()});
+document.getElementById('needfix').addEventListener('click',()=>{document.getElementById('needconfirm').classList.remove('show');needGate();const n=document.getElementById('needname');n.scrollIntoView({behavior:'smooth',block:'center'});n.focus()});
 ['needname','needemail'].forEach(id=>document.getElementById(id).addEventListener('input',needGate));
 const _go=go;go=function(i){_go(i);needGate()};
 needBuild(null);needGate();
