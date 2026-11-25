@@ -73,6 +73,7 @@ window.CLUB = {
     ['FFE schedule Rev 02 · Dark scheme', 'Black speakers, detectors and readers to suit.'],
     ['3D Virtua render · 16 views', 'Every screen in your render gets a bracket, a TV point and an audio zone. You buy the screens, we fit them.']
   ],
+  facility: { tenancy: '14 & 16', street: '101 Valley Way', suburb: 'Mount Cotton', state: 'QLD', postcode: '4165' }, // from the CD02 title block; owner confirms shopping centre yes/no on the page
   studios: [], // sheet 05 shows no group fitness, Pilates, recovery or yoga studio
   note: 'Plans are Rev 02, preliminary. We re‑check everything against the construction issue before a cable is pulled.'
 };
