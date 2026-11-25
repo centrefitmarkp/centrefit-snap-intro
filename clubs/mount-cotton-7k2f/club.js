@@ -49,13 +49,13 @@ window.CLUB = {
     <text x="212" y="122" style="fill:#7f93b3;font-size:9px;font-weight:400">no floor here, open ceiling space</text>
     <g class="hot" data-k="stairs" data-go="0"><rect x="10" y="10" width="40" height="130" rx="4" fill="rgba(25,194,255,.12)" stroke="var(--cyan)"/><text x="24" y="88" transform="rotate(-90 24 88)">STAIRS ▼</text></g>
     <g class="hot" data-k="comms"><rect x="54" y="10" width="92" height="130" rx="6" fill="rgba(255,255,255,.05)" stroke="rgba(255,255,255,.25)"/><text x="62" y="60">STORE</text><text x="62" y="76">+ COMMS</text><text x="62" y="92" style="font-size:9px">32 m²</text></g>
-    <g class="hot" data-k="db"><rect x="100" y="12" width="44" height="22" rx="4" fill="rgba(255,255,255,.08)" stroke="rgba(255,255,255,.35)"/><text x="106" y="27" style="font-size:9px">PB · RACK</text></g>
+    <g class="hot" data-k="db"><rect x="100" y="12" width="44" height="22" rx="4" fill="rgba(255,255,255,.08)" stroke="rgba(255,255,255,.35)"/><text x="106" y="27" style="font-size:9px">ELEC BOARD · RACK</text></g>
     <g class="hot" data-k="d08"><rect x="54" y="142" width="40" height="12" rx="3" fill="rgba(255,255,255,.05)" stroke="rgba(255,255,255,.25)"/><circle cx="74" cy="148" r="4" fill="var(--cyan)"/><circle cx="74" cy="148" r="4" fill="var(--cyan)" class="pulse"/><text x="56" y="170" style="font-size:9px">DOOR D08</text></g>
     <text x="12" y="212" style="fill:#7f93b3;font-size:7px;font-weight:400">Indicative zones only · not a design · Centrefit Group · plans Rev 02 preliminary</text>`,
     rooms: {
       stairs: ['Stairs down to the gym floor', 'The landing at the top of the stairs gets an alarm detector and sits in the view of the stairs camera. Tap again to go back down.'],
-      comms: ['Store and comms, 32 m²', 'Your architect has moved the power board (PB) up here, so this is where our rack goes: the NBN router and UniFi Wi‑Fi controller, Bosch Solution 6000 panel with 24/7 Back2Base monitoring, the CCTV recorder, network switch, Cat6A patching, the Nightlife Music player and the Veyla Protect box. Labelled, certified, out of the way. A Wi‑Fi point up here covers the mezzanine.'],
-      db: ['Relocated power board (PB) and our rack', 'Your electrician lands the power board here, our comms rack goes beside it, one power circuit for everything we install. Short cable runs down to the ceiling below.'],
+      comms: ['Store and comms, 32 m²', 'Your architect has moved the electrical board up here, so this is where our rack goes: the NBN router and UniFi Wi‑Fi controller, Bosch Solution 6000 panel with 24/7 Back2Base monitoring, the CCTV recorder, network switch, Cat6A patching, the Nightlife Music player and the Veyla Protect box. Labelled, certified, out of the way. A Wi‑Fi point up here covers the mezzanine.'],
+      db: ['Relocated electrical board and our rack', 'Your electrician lands the electrical board here, our comms rack goes beside it, one power circuit for everything we install. Short cable runs down to the ceiling below.'],
       d08: ['Store door D08', 'Existing door, new hardware per your schedule. Alarm contact on the door so the comms room is never left open unnoticed. A reader if you want it staff‑only.']
     }
     }
@@ -63,7 +63,7 @@ window.CLUB = {
   inclusionsTitle: 'From your drawings',
   inclusions: [
     ['Sheet 05 · Floor plan, 355 m² + 32 m² mezzanine', 'Camera coverage and audio zones designed from this sheet, not guessed.'],
-    ['Sheet 06 · Mezzanine', 'Comms rack beside the relocated power board (PB): router, Wi‑Fi controller, alarm panel, recorder, Nightlife Music, Veyla Protect.'],
+    ['Sheet 06 · Mezzanine', 'Comms rack beside the relocated electrical board: router, Wi‑Fi controller, alarm panel, recorder, Nightlife Music, Veyla Protect.'],
     ['Sheets 13–14 · Reflected ceiling plans', 'Speakers, detectors and cameras set out to your ceiling grid.'],
     ['Sheets 15–16 · Electrical plans', 'Our data and power points on one marked‑up plan for your electrician.'],
     ['Sheet 20 · Sauna', 'Duress button beside the sauna door.'],
