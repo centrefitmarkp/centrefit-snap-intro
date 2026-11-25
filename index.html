@@ -434,9 +434,13 @@ function applyClub(C){
   document.getElementById('club').textContent=C.name;document.getElementById('for').textContent=C.owner;document.title=C.name+' · Centrefit Group × Veyla';
   const w=chs[0].querySelector('.in');const cov=document.createElement('div');cov.className='cover';cov.innerHTML=`<img src="${C.cover}" alt="${C.name}">`;const cap=document.createElement('p');cap.className='lead';cap.textContent=C.coverCaption;w.insertBefore(cov,w.querySelector('.cols'));w.insertBefore(cap,w.querySelector('.cols'));
   const yc=chs[2].querySelector('.in');yc.querySelector('h2').textContent=C.mapTitle;yc.querySelector('p.fine').textContent=C.mapLead;
-  const svg=document.getElementById('map');svg.setAttribute('viewBox','0 0 400 230');svg.innerHTML=C.svg;svg.parentElement.style.aspectRatio='400/230';
-  Object.keys(rooms).forEach(k=>delete rooms[k]);Object.assign(rooms,C.rooms);bindMap();
-  document.getElementById('mapcard').innerHTML=`<h3>Start at the front door</h3><p style="margin:0">Tap any zone. The pulsing dots are the doors Veyla Protect watches. ${C.note}</p>`;
+  const svg=document.getElementById('map');const levels=C.levels||[{name:'',svg:C.svg,rooms:C.rooms,aspect:'400/230'}];
+  const intro=()=>{document.getElementById('mapcard').innerHTML=`<h3>Start at the front door</h3><p style="margin:0">Tap any zone. The pulsing dots are the doors Veyla Protect watches.${levels.length>1?' Use the buttons above the plan to change level.':''} ${C.note}</p>`};
+  let lv=document.getElementById('lv');if(levels.length>1&&!lv){lv=document.createElement('div');lv.className='who';lv.id='lv';lv.setAttribute('role','tablist');levels.forEach((L,i)=>{const b=document.createElement('button');b.textContent=L.name;b.dataset.l=i;b.onclick=()=>setLevel(i);lv.appendChild(b)});svg.parentElement.parentElement.insertBefore(lv,svg.parentElement)}
+  window.setLevel=function(i){const L=levels[i];svg.setAttribute('viewBox','0 0 '+L.aspect.replace('/',' '));svg.innerHTML=L.svg;svg.parentElement.style.aspectRatio=L.aspect;Object.keys(rooms).forEach(k=>delete rooms[k]);Object.assign(rooms,L.rooms);bindMap();
+    document.querySelectorAll('#map .hot[data-go]').forEach(h=>h.addEventListener('click',()=>{const g=+h.dataset.go;setTimeout(()=>setLevel(g),900)}));
+    if(lv)[...lv.children].forEach((b,j)=>b.classList.toggle('on',j===i));intro()};
+  setLevel(0);
   const inc=document.createElement('div');inc.className='card';inc.innerHTML=`<h3>${C.inclusionsTitle}</h3><ul class="incl">${C.inclusions.map(x=>`<li><b>${x[0]}</b><span>${x[1]}</span></li>`).join('')}</ul>`;yc.appendChild(inc);
 }
 if(q.get('c')&&/^[a-z0-9-]+$/.test(q.get('c'))){const sc=document.createElement('script');sc.src=`clubs/${q.get('c')}/club.js`;sc.onload=()=>applyClub(window.CLUB);document.head.appendChild(sc)}
