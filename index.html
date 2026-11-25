@@ -57,6 +57,12 @@ p{margin:0 0 12px}
 .incl li b{color:var(--cyan);font-size:14px;letter-spacing:.02em}
 .incl li:last-child{border:0}
 #mapcard img{width:100%;border-radius:12px;margin-top:10px;display:block}
+.need .q{background:var(--navy2);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:16px;margin:12px 0}
+.need .q h3{margin:0 0 6px}
+.need .q p{margin:0 0 10px;color:var(--muted);font-size:16px}
+.need .ans{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.need .ans button{background:transparent;color:var(--white);border:2px solid rgba(255,255,255,.3);border-radius:12px;padding:12px;font-size:17px;font-weight:700}
+.need .ans button.on{background:var(--cyan);color:#04121f;border-color:var(--cyan)}
 .map{position:relative;width:100%;aspect-ratio:1/1.05;background:#0e2448;border-radius:18px;border:1px solid rgba(255,255,255,.12);overflow:hidden}
 .map svg{width:100%;height:100%;display:block}
 .hot{cursor:pointer}
@@ -362,6 +368,14 @@ footer{padding:18px;text-align:center;font-size:13px;color:var(--muted);border-t
   <footer style="margin:28px 0 0">Centrefit Group Pty Ltd · ABN 55 168 413 161 · Unit 1, 25 Paisley Drive, Lawnton QLD 4501<br>Security Licence 4626412 · ASIAL Member 035553 · Veyla is a Centrefit Group company<br>Solutions Through Innovation</footer>
 </section>
 
+<section class="ch" data-tab="What we need from you">
+  <div class="eyebrow">What we need from you</div>
+  <h2>A few quick decisions, then we quote.</h2>
+  <p class="fine" id="needlead">Tap an answer. Nothing here is final, it just means the quote comes back right the first time.</p>
+  <div id="need"></div>
+  <div class="row" style="margin-top:12px"><a class="btn" id="needsend" href="mailto:sales@centrefit.com.au?subject=Snap%20Fitness%20build">Send my answers</a><a class="btn ghost" href="tel:0731885115">Call Sales</a></div>
+</section>
+
 </div></div>
 
 <div id="nav"><div class="wrap"><button class="btn ghost" id="back" onclick="go(cur-1)">Back</button><button class="btn" id="next" onclick="go(cur+1)">Next</button></div></div>
@@ -441,9 +455,23 @@ function applyClub(C){
     document.querySelectorAll('#map .hot[data-go]').forEach(h=>h.addEventListener('click',()=>{const g=+h.dataset.go;setTimeout(()=>setLevel(g),900)}));
     if(lv)[...lv.children].forEach((b,j)=>b.classList.toggle('on',j===i));intro()};
   setLevel(0);
+  needBuild(C);needMail(C);
   const inc=document.createElement('div');inc.className='card';inc.innerHTML=`<h3>${C.inclusionsTitle}</h3><ul class="incl">${C.inclusions.map(x=>`<li><b>${x[0]}</b><span>${x[1]}</span></li>`).join('')}</ul>`;yc.appendChild(inc);
 }
 if(q.get('c')&&/^[a-z0-9-]+$/.test(q.get('c'))){const sc=document.createElement('script');sc.src=`clubs/${q.get('c')}/club.js?v=${Date.now()}`;sc.onload=()=>applyClub(window.CLUB);document.head.appendChild(sc)}
+
+// what we need from you: questions depend on what the plans show (CLUB.studios etc)
+const NEED=[];const needAns={};
+function needBuild(C){
+  const box=document.getElementById('need');box.className='need';NEED.length=0;
+  const studios=(C&&C.studios)||[];
+  studios.forEach(st=>NEED.push({k:'audio-'+st.toLowerCase().replace(/[^a-z]+/g,'-'),h:`Separate music in the ${st}?`,p:`Your plans show a ${st}. An extra audio zone gives it its own music and volume, independent of the gym floor, with a wall controller in the room.`,a:['Yes, extra audio zone','No, same music as the floor']}));
+  if(!NEED.length){box.innerHTML=`<div class="card"><h3>Nothing to decide yet.</h3><p style="margin:0">${C?'Your plans don’t show a group fitness, Pilates, recovery or yoga studio, so there is no extra audio zone to choose.':'Once we have your plans, any choices that depend on them show up here.'} We confirm the rest with you at the site walk.</p></div>`;return}
+  box.innerHTML=NEED.map(q=>`<div class="q" data-k="${q.k}"><h3>${q.h}</h3><p>${q.p}</p><div class="ans">${q.a.map((t,i)=>`<button data-i="${i}">${t}</button>`).join('')}</div></div>`).join('');
+  box.querySelectorAll('.q').forEach(qd=>qd.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{qd.querySelectorAll('button').forEach(x=>x.classList.remove('on'));b.classList.add('on');needAns[qd.dataset.k]=b.textContent;needMail(C)})));
+}
+function needMail(C){const name=(C&&C.name)||document.getElementById('club').textContent;const lines=NEED.map(q=>`${q.h} ${needAns[q.k]||'(not answered)'}`);document.getElementById('needsend').href=`mailto:sales@centrefit.com.au?subject=${encodeURIComponent(name+' - my answers')}&body=${encodeURIComponent('Hi Centrefit team,\n\n'+lines.join('\n')+'\n\n'+name)}`}
+needBuild(null);
 </script>
 </body>
 </html>
