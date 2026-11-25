@@ -84,6 +84,11 @@ p{margin:0 0 12px}
 .uplist{margin:6px 0 0;font-size:15px;color:var(--muted)}
 .uplist div{padding:3px 0}
 .uplist span{color:#fff}
+.fs{margin:10px 0 0}
+.fs b{display:block;margin:0 0 6px}
+.fs .ans{grid-template-columns:1fr;gap:6px}
+.fs .ans button{text-align:left;font-size:16px;padding:12px 14px;width:100%}
+.fs .ans button.on{background:var(--cyan);color:#04121f;border-color:var(--cyan)}
 .map{position:relative;width:100%;aspect-ratio:1/1.05;background:#0e2448;border-radius:18px;border:1px solid rgba(255,255,255,.12);overflow:hidden}
 .map svg{width:100%;height:100%;display:block}
 .hot{cursor:pointer}
@@ -398,11 +403,13 @@ footer{padding:18px;text-align:center;font-size:13px;color:var(--muted);border-t
   <p class="fine" id="needlead">Tap an answer. Nothing here is final, it just means the quote comes back right the first time.</p>
   <div id="need"></div>
   <div class="card"><h3>Your TVs: you buy them, we do everything else.</h3><p style="margin:0">We supply and fit the brackets, the power and data points, the cabling and the commissioning for every screen on your plans. The screens themselves you buy from a retailer of your choice. That's deliberate. Screens in a 24/7 club run far longer than any manufacturer's warranty allows for a reseller, so buying retail puts you under Australian Consumer Law guarantees, which are stronger than anything we could pass on. We'll give you the exact sizes and the spec to buy before fit‑off.</p><button id="tvack" type="button">Yes, I agree and understand</button></div>
-  <div class="card" id="needfiles"><h3>Your files</h3><p style="margin:0" id="needfilestxt">No files added yet. You can add them on the Next steps page, or send without them.</p><div class="row" style="margin-top:8px"><button class="btn ghost" type="button" onclick="go(8)">Add or change files</button></div></div>
+  <div class="card" id="needfiles"><h3>Your files</h3><p style="margin:0 0 6px" id="needfilestxt">So we quote from the right drawings, tell us where your files are.</p>
+    <div class="fs" data-f="cd"><b>Construction files</b><div class="ans"><button type="button" data-v="upload">Upload now</button><button type="button" data-v="sent">I've already sent these to Centrefit</button><button type="button" data-v="none">I don't have these yet</button></div></div>
+    <div class="fs" data-f="d3"><b>3D files</b><div class="ans"><button type="button" data-v="upload">Upload now</button><button type="button" data-v="sent">I've already sent these to Centrefit</button><button type="button" data-v="none">I don't have these yet</button></div></div></div>
   <div class="card" id="needwho"><h3>Who's answering</h3><p style="margin:0 0 8px" class="fine">So the right person gets the quote.</p><input id="needname" type="text" placeholder="Your name" autocomplete="name"><input id="needemail" type="email" placeholder="Your email address" autocomplete="email"></div>
   <div class="row" style="margin-top:12px"><button class="btn" id="needsend" disabled>Send my answers</button><a class="btn ghost" id="needcall" href="tel:0731885115">Call Sales</a></div>
   <div id="needconfirm"><h3 style="margin:0">Are your details correct?</h3><p class="fine" style="margin:4px 0 8px">Our quote goes to this name and email, so please check the spelling.</p><div class="who" id="cfname"></div><div class="who" id="cfemail"></div><div class="typo" id="cftypo"></div><button id="needyes" type="button">Yes, my details are correct. Send.</button><button id="needfix" type="button">No, let me fix them</button></div>
-  <p class="fine" id="needstatus">Answer every question and add your name and email, then send. Until then the rest of the page waits.</p>
+  <p class="fine" id="needstatus">Answer every question, tell us where your files are, add your name and email, then send. Until then the rest of the page waits.</p>
 </section>
 
 </div></div>
@@ -508,18 +515,21 @@ const FILES={cd:[],d3:[]};const MAXF=25*1024*1024;
 function fmtMB(n){return (n/1048576).toFixed(1)+' MB'}
 function upRender(){[['cd','upcdlist'],['d3','up3dlist']].forEach(([k,id])=>{document.getElementById(id).innerHTML=FILES[k].map((f,i)=>`<div><span>${f.name}</span> · ${fmtMB(f.size)} <a href="#" data-k="${k}" data-i="${i}" style="color:var(--cyan)">remove</a></div>`).join('')});
   document.querySelectorAll('.uplist a').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();FILES[a.dataset.k].splice(+a.dataset.i,1);upRender()}));
-  const n=FILES.cd.length+FILES.d3.length;document.getElementById('needfilestxt').textContent=n?`${FILES.cd.length} construction file${FILES.cd.length===1?'':'s'} and ${FILES.d3.length} 3D file${FILES.d3.length===1?'':'s'} ready to send with your answers.`:'No files added yet. You can add them on the Next steps page, or send without them.'}
+  ['cd','d3'].forEach(k=>{if(FILES[k].length)FSTAT[k]='upload';else if(FSTAT[k]==='upload')FSTAT[k]=null});fsRender();if(typeof needGate==='function')needGate();const n=FILES.cd.length+FILES.d3.length;document.getElementById('needfilestxt').textContent=n?`${FILES.cd.length} construction file${FILES.cd.length===1?'':'s'} and ${FILES.d3.length} 3D file${FILES.d3.length===1?'':'s'} ready to send with your answers.`:'So we quote from the right drawings, tell us where your files are.'}
 [['upcd','cd'],['up3d','d3']].forEach(([id,k])=>document.getElementById(id).addEventListener('change',e=>{[...e.target.files].forEach(f=>{if(f.size>MAXF){alert(f.name+' is over 25 MB. Please send that one by email.');return}FILES[k].push(f)});e.target.value='';upRender()}));
 const NEED_ENDPOINT='https://cortex.veyla.com.au/api/snap-answers'; // Mitchell to ship; until then the mailto fallback opens their mail app
 let needClub=null;const needSlug=()=> (q.get('c')||'generic');const needKey=()=>'snap-sent-'+needSlug();
 if(q.get('reset')){localStorage.removeItem('snap-sent-'+(q.get('c')||'generic'))}
 function needSent(){return !!localStorage.getItem(needKey())}
-function needReady(){const em=(document.getElementById('needemail').value||'').trim(),nm=(document.getElementById('needname').value||'').trim();return NEED.every(x=>needAns[x.k])&&!!needAns.tvs&&nm.length>1&&/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)}
+const FSTAT={cd:null,d3:null};const FLBL={upload:'Uploading now',sent:'Already sent to Centrefit',none:'Not available yet'};
+function fsRender(){document.querySelectorAll('.fs').forEach(d=>{const k=d.dataset.f;const n=FILES[k].length;d.querySelectorAll('button').forEach(b=>{b.classList.toggle('on',FSTAT[k]===b.dataset.v);if(b.dataset.v==='upload')b.textContent=n?`Upload now · ${n} file${n===1?'':'s'} attached`:'Upload now'})})}
+document.querySelectorAll('.fs button').forEach(b=>b.addEventListener('click',()=>{const k=b.closest('.fs').dataset.f,v=b.dataset.v;FSTAT[k]=v;fsRender();needGate();if(v==='upload'&&!FILES[k].length){go(8);setTimeout(()=>document.getElementById(k==='cd'?'upcd':'up3d').click(),400)}}));
+function needReady(){if(FSTAT.cd===null||FSTAT.d3===null)return false;if((FSTAT.cd==='upload'&&!FILES.cd.length)||(FSTAT.d3==='upload'&&!FILES.d3.length))return false;const em=(document.getElementById('needemail').value||'').trim(),nm=(document.getElementById('needname').value||'').trim();return NEED.every(x=>needAns[x.k])&&!!needAns.tvs&&nm.length>1&&/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)}
 function needGate(){const onNeed=cur===chs.length-1,lock=onNeed&&!needSent();
   document.getElementById('back').disabled=lock;document.getElementById('next').disabled=lock;[...tabs.children].forEach(b=>b.disabled=lock);document.getElementById('needcall').classList.toggle('dim',lock);
-  const sb=document.getElementById('needsend');if(needSent()){sb.disabled=true;sb.classList.add('sent');sb.textContent='Answers sent ✓';document.getElementById('needstatus').textContent='Thanks, your answers are with our Sales Team. You can keep browsing.';document.querySelectorAll('#need button,#needwho input,#tvack').forEach(x=>x.disabled=true)}else{sb.disabled=!needReady()}}
+  const sb=document.getElementById('needsend');if(needSent()){sb.disabled=true;sb.classList.add('sent');sb.textContent='Answers sent ✓';document.getElementById('needstatus').textContent='Thanks, your answers are with our Sales Team. You can keep browsing.';document.querySelectorAll('#need button,#needwho input,#tvack,.fs button').forEach(x=>x.disabled=true)}else{sb.disabled=!needReady()}}
 function needMail(C){needClub=C}
-function needPayload(){const name=document.getElementById('needname').value.trim(),email=document.getElementById('needemail').value.trim(),club=(needClub&&needClub.name)||document.getElementById('club').textContent;return {club,slug:needSlug(),name,email,answers:NEED.map(x=>({question:x.h,answer:needAns[x.k]})).concat([{question:'Your TVs: you buy them, we do everything else.',answer:needAns.tvs||''}]),link:location.href,sent:new Date().toISOString()}}
+function needPayload(){const name=document.getElementById('needname').value.trim(),email=document.getElementById('needemail').value.trim(),club=(needClub&&needClub.name)||document.getElementById('club').textContent;return {club,slug:needSlug(),name,email,answers:NEED.map(x=>({question:x.h,answer:needAns[x.k]})).concat([{question:'Your TVs: you buy them, we do everything else.',answer:needAns.tvs||''},{question:'Construction files',answer:FLBL[FSTAT.cd]+(FILES.cd.length?' ('+FILES.cd.map(f=>f.name).join(', ')+')':'')},{question:'3D files',answer:FLBL[FSTAT.d3]+(FILES.d3.length?' ('+FILES.d3.map(f=>f.name).join(', ')+')':'')}]),link:location.href,sent:new Date().toISOString()}}
 async function needSend(){const sb=document.getElementById('needsend');sb.disabled=true;sb.textContent='Sending…';const P=needPayload();let ok=false;
   try{const nf=FILES.cd.length+FILES.d3.length;let r;if(nf){const fd=new FormData();fd.append('payload',JSON.stringify(P));FILES.cd.forEach(f=>fd.append('construction',f,f.name));FILES.d3.forEach(f=>fd.append('render3d',f,f.name));sb.textContent='Sending files…';r=await fetch(NEED_ENDPOINT,{method:'POST',body:fd})}else{r=await fetch(NEED_ENDPOINT,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(P)})}ok=r.ok}catch(e){ok=false}
   if(!ok){const lines=[`Club: ${P.club}`,`Name: ${P.name}`,`Email: ${P.email}`,'',...P.answers.map(a=>`${a.question} ${a.answer}`),'',(FILES.cd.length+FILES.d3.length?'Please attach your construction and 3D files to this email: '+[...FILES.cd,...FILES.d3].map(f=>f.name).join(', '):''),'',P.link];location.href=`mailto:sales@centrefit.com.au,purchasing@centrefit.com.au?subject=${encodeURIComponent(P.club+' - answers from '+P.name)}&body=${encodeURIComponent(lines.join('\n'))}`}
