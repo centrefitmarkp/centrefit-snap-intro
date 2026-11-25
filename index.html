@@ -86,8 +86,8 @@ p{margin:0 0 12px}
 .uplist span{color:#fff}
 .fs{margin:10px 0 0}
 .fs b{display:block;margin:0 0 6px}
-.fs .ans{grid-template-columns:1fr;gap:6px}
-.fs .ans button{text-align:left;font-size:16px;padding:12px 14px;width:100%;background:transparent;color:var(--white);border:2px solid rgba(255,255,255,.3);border-radius:12px;font-weight:700}
+.fs .ans{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.fs .ans button{text-align:center;font-size:17px;padding:12px 8px;width:100%;background:transparent;color:var(--white);border:2px solid rgba(255,255,255,.3);border-radius:12px;font-weight:700}
 .fs .ans button.on{background:var(--cyan);color:#04121f;border-color:var(--cyan)}
 .map{position:relative;width:100%;aspect-ratio:1/1.05;background:#0e2448;border-radius:18px;border:1px solid rgba(255,255,255,.12);overflow:hidden}
 .map svg{width:100%;height:100%;display:block}
@@ -401,8 +401,8 @@ footer{padding:18px;text-align:center;font-size:13px;color:var(--muted);border-t
   <div id="need"></div>
   <div class="card"><h3>Your TVs: you buy them, we do everything else.</h3><p style="margin:0">We supply and fit the brackets, the power and data points, the cabling and the commissioning for every screen on your plans. The screens themselves you buy from a retailer of your choice. That's deliberate. Screens in a 24/7 club run far longer than any manufacturer's warranty allows for a reseller, so buying retail puts you under Australian Consumer Law guarantees, which are stronger than anything we could pass on. We'll give you the exact sizes and the spec to buy before fit‑off.</p><button id="tvack" type="button">Yes, I agree and understand</button></div>
   <div class="card" id="needfiles"><h3>Your files</h3><p style="margin:0 0 6px" id="needfilestxt">So we quote from the right drawings, tell us where your files are.</p>
-    <div class="fs" data-f="cd"><b>Construction files</b><div class="ans"><button type="button" data-v="upload">Upload now</button><button type="button" data-v="sent">I've already sent these to Centrefit</button><button type="button" data-v="none">I don't have these yet</button></div><div class="up"><input type="file" id="upcd" multiple accept=".pdf,.dwg,.dxf,.zip,image/*"><div class="uplist" id="upcdlist"></div></div></div>
-    <div class="fs" data-f="d3"><b>3D files</b><div class="ans"><button type="button" data-v="upload">Upload now</button><button type="button" data-v="sent">I've already sent these to Centrefit</button><button type="button" data-v="none">I don't have these yet</button></div><div class="up"><input type="file" id="up3d" multiple accept=".pdf,.zip,image/*,.mp4,.mov"><div class="uplist" id="up3dlist"></div></div></div>
+    <div class="fs" data-f="cd"><b>Construction files</b><div class="ans"><button type="button" data-v="upload">Upload now</button><button type="button" data-v="sent">Already sent</button><button type="button" data-v="none">Don't have yet</button></div><div class="up"><input type="file" id="upcd" multiple accept=".pdf,.dwg,.dxf,.zip,image/*"><div class="uplist" id="upcdlist"></div></div></div>
+    <div class="fs" data-f="d3"><b>3D files</b><div class="ans"><button type="button" data-v="upload">Upload now</button><button type="button" data-v="sent">Already sent</button><button type="button" data-v="none">Don't have yet</button></div><div class="up"><input type="file" id="up3d" multiple accept=".pdf,.zip,image/*,.mp4,.mov"><div class="uplist" id="up3dlist"></div></div></div>
     <div class="fine">Up to 25 MB per file. Your files go with your answers when you press Send.</div></div>
   <div class="card" id="needwho"><h3>Who's answering</h3><p style="margin:0 0 8px" class="fine">So the right person gets the quote.</p><input id="needname" type="text" placeholder="Your name" autocomplete="name"><input id="needemail" type="email" placeholder="Your email address" autocomplete="email"></div>
   <div class="row" style="margin-top:12px"><button class="btn" id="needsend" disabled>Send my answers</button><a class="btn ghost" id="needcall" href="tel:0731885115">Call Sales</a></div>
@@ -520,7 +520,7 @@ let needClub=null;const needSlug=()=> (q.get('c')||'generic');const needKey=()=>
 if(q.get('reset')){localStorage.removeItem('snap-sent-'+(q.get('c')||'generic'))}
 function needSent(){return !!localStorage.getItem(needKey())}
 const FSTAT={cd:null,d3:null};const FLBL={upload:'Uploading now',sent:'Already sent to Centrefit',none:'Not available yet'};
-function fsRender(){document.querySelectorAll('.fs').forEach(d=>{const k=d.dataset.f;const n=FILES[k].length;d.querySelectorAll('button').forEach(b=>{b.classList.toggle('on',FSTAT[k]===b.dataset.v);if(b.dataset.v==='upload')b.textContent=n?`${n} file${n===1?'':'s'} attached · add more`:'Upload now'})})}
+function fsRender(){document.querySelectorAll('.fs').forEach(d=>{const k=d.dataset.f;const n=FILES[k].length;d.querySelectorAll('button').forEach(b=>{b.classList.toggle('on',FSTAT[k]===b.dataset.v);if(b.dataset.v==='upload')b.textContent=n?`${n} attached · add more`:'Upload now'})})}
 document.querySelectorAll('.fs button').forEach(b=>b.addEventListener('click',()=>{const k=b.closest('.fs').dataset.f,v=b.dataset.v;FSTAT[k]=v;fsRender();needGate();if(v==='upload'){document.getElementById(k==='cd'?'upcd':'up3d').click()}}));
 function needReady(){if(FSTAT.cd===null||FSTAT.d3===null)return false;if((FSTAT.cd==='upload'&&!FILES.cd.length)||(FSTAT.d3==='upload'&&!FILES.d3.length))return false;const em=(document.getElementById('needemail').value||'').trim(),nm=(document.getElementById('needname').value||'').trim();return NEED.every(x=>needAns[x.k])&&!!needAns.tvs&&nm.length>1&&/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)}
 function needGate(){const onNeed=cur===chs.length-1,lock=onNeed&&!needSent();
