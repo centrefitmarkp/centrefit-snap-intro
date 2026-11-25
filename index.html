@@ -393,8 +393,8 @@ document.addEventListener('keydown',e=>{if(e.key==='ArrowRight')go(cur+1);if(e.k
 let counted=false;function count(){if(counted)return;counted=true;document.querySelectorAll('[data-count]').forEach(el=>{const to=+el.dataset.count,suf=el.dataset.suffix||'',t0=performance.now();const step=t=>{const k=Math.min(1,(t-t0)/1100);el.textContent=Math.round(to*(1-Math.pow(1-k,3)))+(k===1?suf:'');if(k<1)requestAnimationFrame(step)};requestAnimationFrame(step)})}
 // map
 const rooms={
- entry:['Front entry','Snap member reader and door strike, wired and programmed. Intercom back to reception. The Veyla Protect camera sits just inside, watching every entry 24/7.'],
- reception:['Reception','Nothing of ours clutters your counter. Wi‑Fi coverage, CCTV over the counter and the entry, and the intercom from the front door answers here.'],
+ entry:['Front entry','Snap member reader and door strike, wired and programmed. The Veyla Protect camera sits just inside, watching every entry 24/7.'],
+ reception:['Reception','Nothing of ours clutters your counter. Wi‑Fi coverage and CCTV over the counter and the entry.'],
  comms:['Comms room','Where everything lives: the NBN router and UniFi Wi‑Fi controller, the Bosch Solution 6000 alarm panel with 24/7 Back2Base monitoring, the CCTV recorder, network switch, Cat6A patching, the Nightlife Music player and the Veyla Protect AI box. Everything labelled and certified.'],
  amen:['Change rooms and amenities','Alarm detectors in the corridor and a duress button inside the DWC (the disabled water closet, marked PWD on most plans). Cameras cover the corridor only, never inside a cubicle.'],
  floor:['Gym floor','AI‑powered, NDAA‑compliant Dahua CCTV with full coverage, ceiling speakers and amplifiers for music, TV points and screens, Wi‑Fi throughout, alarm detectors.'],
