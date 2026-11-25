@@ -486,6 +486,7 @@ function needBuild(C){
 }
 const NEED_ENDPOINT='https://cortex.veyla.com.au/api/snap-answers'; // Mitchell to ship; until then the mailto fallback opens their mail app
 let needClub=null;const needSlug=()=> (q.get('c')||'generic');const needKey=()=>'snap-sent-'+needSlug();
+if(q.get('reset')){localStorage.removeItem('snap-sent-'+(q.get('c')||'generic'))}
 function needSent(){return !!localStorage.getItem(needKey())}
 function needReady(){const em=(document.getElementById('needemail').value||'').trim(),nm=(document.getElementById('needname').value||'').trim();return NEED.every(x=>needAns[x.k])&&nm.length>1&&/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)}
 function needGate(){const onNeed=cur===chs.length-1,lock=onNeed&&!needSent();
