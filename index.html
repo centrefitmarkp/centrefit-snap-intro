@@ -443,7 +443,7 @@ function applyClub(C){
   setLevel(0);
   const inc=document.createElement('div');inc.className='card';inc.innerHTML=`<h3>${C.inclusionsTitle}</h3><ul class="incl">${C.inclusions.map(x=>`<li><b>${x[0]}</b><span>${x[1]}</span></li>`).join('')}</ul>`;yc.appendChild(inc);
 }
-if(q.get('c')&&/^[a-z0-9-]+$/.test(q.get('c'))){const sc=document.createElement('script');sc.src=`clubs/${q.get('c')}/club.js`;sc.onload=()=>applyClub(window.CLUB);document.head.appendChild(sc)}
+if(q.get('c')&&/^[a-z0-9-]+$/.test(q.get('c'))){const sc=document.createElement('script');sc.src=`clubs/${q.get('c')}/club.js?v=${Date.now()}`;sc.onload=()=>applyClub(window.CLUB);document.head.appendChild(sc)}
 </script>
 </body>
 </html>
